@@ -46,7 +46,44 @@ body.dark #stockTab.active{background:#163e34;border-color:#398d71;color:#9ae6c5
 #monitorPanel .batchbar{padding-bottom:9px;border-bottom:1px solid var(--line);margin-bottom:12px}
 body.dark #monitorBadge{color:var(--text)}
 @media(max-width:600px){#monitorHeading{gap:7px}#monitorIcon{width:29px;height:29px}#tableTitle{font-size:.89rem}#monitorBadge{padding:4px 7px}}
-</style></head><body>
+</style>
+<style id="unified-ui-2026">
+/* Shared visual system across monitoring categories and dialogs */
+:root{--control-h:38px;--control-radius:9px;--control-gap:8px}
+button,.btn,input:not([type="checkbox"]):not([type="file"]),select{min-height:var(--control-h);border-radius:var(--control-radius);font-size:.81rem;line-height:1.2}
+button,.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 12px;white-space:nowrap;font-weight:550}
+button:disabled{opacity:.48;cursor:not-allowed}
+button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.toolbar{gap:var(--control-gap);align-items:stretch;margin:12px 0 11px}
+.toolbar>button,.toolbar>.filter-wrap,.toolbar>#search{height:var(--control-h)}
+.toolbar #search{flex:1 1 230px;min-width:180px}
+.filter-wrap #filterTrigger{height:var(--control-h);min-height:var(--control-h);min-width:142px}
+#deliveryTab,#stockTab{min-height:var(--control-h);padding:8px 12px}
+.batchbar{align-items:center;gap:var(--control-gap);margin:0 0 10px!important;padding:0 0 10px!important}
+.batchbar button{min-height:36px;padding:7px 11px;font-size:.78rem}
+#selectionCount{display:inline-flex;align-items:center;min-height:36px;font-size:.78rem}
+#monitorPanel{padding:14px 16px;border-radius:12px}
+#monitorHeading{gap:9px;margin:0 0 10px;min-height:36px;flex-wrap:nowrap}
+#monitorIcon{width:34px;height:34px;flex:none;border-radius:9px}
+#monitorHeadingText{min-width:0;gap:2px}
+#tableTitle{font-size:.96rem;line-height:1.25}
+#monitorSubtitle{font-size:.71rem;line-height:1.3}
+#monitorBadge{margin-left:0;align-self:center;padding:4px 8px;border-radius:7px}
+.tablewrap{border:1px solid var(--line);border-radius:9px;max-width:100%}
+.tablewrap th,.tablewrap td{vertical-align:middle;padding:8px 9px}
+.tablewrap th{font-size:.73rem;font-weight:700}
+.tablewrap .actions{align-items:center;gap:5px}
+.tablewrap .actions button{min-height:30px;padding:5px 8px;font-size:.73rem}
+.tablewrap .status-trigger{min-height:30px}
+.tablewrap input[type="checkbox"]{width:15px;height:15px;accent-color:var(--category);cursor:pointer}
+.pagebar{gap:10px;margin-top:10px}.pagecontrols{gap:6px;flex-wrap:wrap}.pagecontrols button,.pagecontrols select{min-height:32px}
+.dialog{border:1px solid var(--line);box-shadow:0 20px 70px #0003}.dialog h2{font-size:1.04rem;margin-bottom:12px}.dialog footer{flex-wrap:wrap;align-items:center}
+.fields{gap:12px}.fields label{gap:6px}.import{border-radius:10px}
+body.dark button.active{color:#a6cbff}body.dark input,body.dark select,body.dark textarea{color:var(--text)}
+@media(max-width:850px){.toolbar{align-items:stretch}.toolbar #search{order:0;flex:1 1 230px}.toolbar>button{flex:0 0 auto}}
+@media(max-width:600px){:root{--control-h:36px;--control-gap:6px}#monitorPanel{padding:10px}#monitorHeading{margin-bottom:9px}#tableTitle{font-size:.9rem}.toolbar #search{order:2;flex:1 1 100%;width:100%}.toolbar #deliveryTab,.toolbar #stockTab{flex:1 1 auto}.batchbar button{flex:1 1 auto;min-height:34px}.batchbar #selectionCount{flex:1 1 100%;min-height:20px}.tablewrap th,.tablewrap td{padding:7px 8px}.dialog footer button{flex:1 1 auto}}
+</style>
+</head><body>
 <header><div><h1>▣ Bacolod Warehouse Monitoring</h1><div class="sub">Delivery Receipts & Stocks Transfers</div></div><div><button id="theme">☾ Theme</button> <button id="backup">Export backup</button> <button id="privacyInfo" aria-label="Data and privacy information" title="Data & Privacy">ⓘ</button></div></header>
 <main><div class="stats"><div class="card"><div class="sub">Total Records</div><div class="statnum" id="total">0</div></div><div class="card"><div class="sub">Pending</div><div class="statnum" id="pending">0</div></div><div class="card"><div class="sub">Received</div><div class="statnum" id="received">0</div></div><div class="card"><div class="sub">Delayed</div><div class="statnum" id="delayed">0</div></div></div>
 <div class="toolbar"><button class="active" id="deliveryTab">Delivery Monitoring</button><button id="stockTab">Stocks Transfer</button><input id="search" placeholder="Search DR No., Ref No., origin, destination…"><span class="filter-wrap"><select id="filter" aria-label="Filter records by status"><option value="">All statuses</option><option>PENDING</option><option>RECEIVED</option><option>CANCELLED</option><option>REJECTED</option><option>DELAYED</option></select><button type="button" id="filterTrigger" class="filter-trigger" aria-haspopup="listbox" aria-expanded="false"><span class="filter-dot"></span><span class="filter-label">All statuses</span><span class="filter-arrow">⌄</span></button></span><button class="primary" id="add">+ Add record</button><button id="importBtn">Import Excel / Paste</button><button id="exportCsv">Export CSV</button><button id="historyBtn">Import History</button></div>
