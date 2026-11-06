@@ -83,6 +83,80 @@ body.dark button.active{color:#a6cbff}body.dark input,body.dark select,body.dark
 @media(max-width:850px){.toolbar{align-items:stretch}.toolbar #search{order:0;flex:1 1 230px}.toolbar>button{flex:0 0 auto}}
 @media(max-width:600px){:root{--control-h:36px;--control-gap:6px}#monitorPanel{padding:10px}#monitorHeading{margin-bottom:9px}#tableTitle{font-size:.9rem}.toolbar #search{order:2;flex:1 1 100%;width:100%}.toolbar #deliveryTab,.toolbar #stockTab{flex:1 1 auto}.batchbar button{flex:1 1 auto;min-height:34px}.batchbar #selectionCount{flex:1 1 100%;min-height:20px}.tablewrap th,.tablewrap td{padding:7px 8px}.dialog footer button{flex:1 1 auto}}
 </style>
+<style id="stylish-compact-2026">
+/* Compact visual refinement: existing data and application behavior preserved */
+:root{--control-h:34px;--control-radius:9px;--control-gap:6px;--line:#dce5f0;--accent:#2563eb;--soft:#f5f8fd;--hover:#edf4ff}
+body{background:#f5f7fb;font-size:13px;-webkit-font-smoothing:antialiased}
+body.dark{background:#101823;--panel:#192533;--line:#304256;--soft:#1d2c3c;--hover:#263a50;--accent:#78adff}
+header{min-height:59px;padding:9px 20px;box-shadow:0 1px 8px #132f5208}
+header h1{font-size:1rem;letter-spacing:-.035em;font-weight:750}
+header .sub{font-size:.7rem;margin-top:2px}
+header>div:last-child{display:flex;align-items:center;gap:6px}
+main{padding:12px 18px;max-width:1600px}
+.stats{gap:8px}.card{padding:10px 13px;border-radius:11px;min-height:65px;box-shadow:0 2px 10px #102a4705}
+.card::before{width:3px}.card .sub{font-size:.7rem;letter-spacing:.01em}.statnum{font-size:1.43rem;line-height:1.2;margin-top:4px;letter-spacing:-.035em}
+.toolbar{margin:11px 0 9px;gap:6px;align-items:center}
+button,.btn,input:not([type="checkbox"]):not([type="file"]),select{min-height:34px;border-radius:8px;font-size:.765rem}
+button,.btn{padding:7px 10px;font-weight:600;transition:background .18s,border-color .18s,box-shadow .18s,transform .18s}
+button:hover:not(:disabled){box-shadow:0 2px 9px #1e55a013}
+button.primary,.btn.primary{background:#2563eb;border-color:#2563eb;box-shadow:0 2px 7px #2563eb1c}
+button.primary:hover{background:#1d54c7}
+#deliveryTab,#stockTab{min-height:34px;padding:6px 10px}
+#deliveryTab.active{background:#eaf2ff;border-color:#b5d0ff;box-shadow:inset 0 -2px #2563eb}
+#stockTab.active{background:#e5f7ef;border-color:#a6e4c6;box-shadow:inset 0 -2px #11966b}
+.toolbar>button,.toolbar>.filter-wrap,.toolbar>#search{height:34px}
+.toolbar #search{flex:1 1 230px;min-width:150px;padding-left:12px}
+.filter-wrap #filterTrigger{height:34px;min-height:34px;min-width:126px}
+#monitorPanel{padding:11px 13px;border-radius:11px;box-shadow:0 3px 16px #102a4708}
+#monitorHeading{min-height:29px;margin:0 0 8px;gap:7px}
+#monitorIcon{height:28px;width:28px;border-radius:7px;font-size:14px}
+#tableTitle{font-size:.86rem;font-weight:750}
+#monitorSubtitle{font-size:.67rem}
+#monitorBadge{font-size:.62rem;padding:3px 7px}
+#monitorPanel .batchbar{gap:5px;margin:0 0 8px!important;padding:0 0 8px!important}
+.batchbar button{min-height:30px;padding:5px 9px;font-size:.73rem}
+#selectionCount{min-height:30px;font-size:.72rem}
+.tablewrap{border-radius:8px;max-height:calc(100vh - 292px)}
+.tablewrap th,.tablewrap td{padding:7px 8px}
+.tablewrap th{font-size:.69rem;letter-spacing:.02em}
+.tablewrap td{font-size:.76rem}
+.tablewrap .actions button{min-height:27px;padding:4px 7px;font-size:.7rem}
+.tablewrap .status-trigger{min-height:27px;font-size:.69rem!important}
+.pagebar{margin-top:7px}.pagecontrols button,.pagecontrols select{min-height:29px}
+.dialog{border-radius:13px;padding:18px}.dialog h2{font-size:1rem}
+@media(max-width:850px){header{padding:9px 13px}main{padding:11px}.toolbar #search{flex:1 1 200px}.tablewrap{max-height:65vh}}
+@media(max-width:600px){main{padding:9px}.stats{gap:6px}.card{padding:9px 10px;min-height:61px}.statnum{font-size:1.27rem}.toolbar{gap:6px}.toolbar #search{order:2;flex:1 1 100%;width:100%}.toolbar #deliveryTab,.toolbar #stockTab{flex:1 1 auto}#monitorPanel{padding:9px}.batchbar button{min-height:30px}.tablewrap th,.tablewrap td{padding:6px 7px}header>div:last-child{gap:4px}header button{padding:6px 8px}}
+@media(max-width:390px){header{align-items:flex-start}header h1{font-size:.88rem}.card .sub{font-size:.65rem}}
+@media(prefers-reduced-motion:reduce){button{transition:none}}
+</style>
+<style id="data-first-space-2026">
+/* Data-first density: reserve most of the viewport for monitoring records. */
+header{min-height:48px!important;padding:7px 16px!important;gap:6px!important}
+header h1{font-size:.96rem!important}header .sub{font-size:.67rem!important;margin-top:1px!important}
+header button{min-height:30px!important;padding:5px 9px!important}
+main{padding:9px 14px!important;max-width:1800px!important}
+.stats{gap:7px!important}.stats .card{padding:7px 11px!important;min-height:57px!important;border-radius:9px!important}
+.stats .card .sub{font-size:.67rem!important}.stats .statnum{font-size:1.24rem!important;margin-top:1px!important;line-height:1.25!important}
+.toolbar{margin:8px 0!important;gap:6px!important;align-items:center!important}
+.toolbar>button,.toolbar>.filter-wrap,.toolbar>#search,.toolbar #filterTrigger{height:32px!important;min-height:32px!important}
+.toolbar button,.toolbar input{padding:5px 9px!important;font-size:.76rem!important}
+#deliveryTab,#stockTab{min-height:32px!important;padding:5px 9px!important}
+#monitorPanel{padding:8px 10px!important;border-radius:10px!important}
+#monitorHeading{min-height:25px!important;margin:0 0 6px!important;gap:7px!important}
+#monitorIcon{width:25px!important;height:25px!important;font-size:13px!important}
+#tableTitle{font-size:.83rem!important}#monitorSubtitle{font-size:.64rem!important}
+#monitorBadge{padding:3px 6px!important;font-size:.62rem!important}
+#monitorPanel .batchbar{margin:0 0 6px!important;padding:0 0 6px!important;gap:5px!important}
+.batchbar button{min-height:29px!important;padding:4px 8px!important;font-size:.72rem!important}
+#selectionCount{min-height:29px!important;font-size:.7rem!important}
+.tablewrap{max-height:calc(100dvh - 255px)!important;min-height:320px!important;overflow:auto!important}
+.tablewrap th,.tablewrap td{padding:6px 8px!important;font-size:.74rem!important}
+.tablewrap th{font-size:.68rem!important}
+.tablewrap .actions button,.tablewrap .status-trigger{min-height:26px!important;padding:4px 7px!important;font-size:.7rem!important}
+.pagebar{margin-top:5px!important;gap:5px!important}.pagebar .hint{font-size:.7rem!important}
+.pagecontrols button,.pagecontrols select{min-height:27px!important;padding:3px 7px!important}
+@media(max-width:700px){main{padding:8px!important}.stats{gap:5px!important}.stats .card{padding:7px!important;min-height:54px!important}.stats .statnum{font-size:1.1rem!important}.toolbar{gap:5px!important}.toolbar #search{order:2!important;flex-basis:100%!important}.tablewrap{max-height:calc(100dvh - 295px)!important;min-height:260px!important}#monitorPanel{padding:7px!important}}
+</style>
 </head><body>
 <header><div><h1>▣ Bacolod Warehouse Monitoring</h1><div class="sub">Delivery Receipts & Stocks Transfers</div></div><div><button id="theme">☾ Theme</button> <button id="backup">Export backup</button> <button id="privacyInfo" aria-label="Data and privacy information" title="Data & Privacy">ⓘ</button></div></header>
 <main><div class="stats"><div class="card"><div class="sub">Total Records</div><div class="statnum" id="total">0</div></div><div class="card"><div class="sub">Pending</div><div class="statnum" id="pending">0</div></div><div class="card"><div class="sub">Received</div><div class="statnum" id="received">0</div></div><div class="card"><div class="sub">Delayed</div><div class="statnum" id="delayed">0</div></div></div>
