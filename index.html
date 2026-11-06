@@ -338,7 +338,7 @@ body.dark #stockTab.active{background:#1b4137!important;border-color:#3b8c74!imp
 <h2>Google Sheets synchronization</h2>
 <p class="hint" id="cloudSummary">Sign in to load your shared database. Your existing browser records are not automatically overwritten.</p>
 <div id="cloudActions" style="display:flex;gap:8px;flex-wrap:wrap">
-<button id="cloudLoad" type="button">Load cloud records</button>
+<button id="cloudLoad" type="button">Load cloud records (with backup)</button>
 <button id="cloudMigrate" type="button" class="primary">Upload local records (merge)</button>
 </div>
 <p class="hint">Export a backup first. Cloud changes use record-level updates with conflict checks. Do not edit from two PCs simultaneously. Import history is browser-local.</p>
@@ -517,11 +517,29 @@ async function cloudSignIn(){
  cloudTokenClient.requestAccessToken({prompt:'consent'});
 }
 $('cloudConnect').onclick=cloudSignIn;
+// Preserve a separate recovery snapshot before any cloud-to-browser replacement.
+const CLOUD_RECOVERY_KEY='bcd-monitor-pre-cloud-load-backup-v1';
+function saveCloudRecovery(){
+ const backup={createdAt:new Date().toISOString(),records:data,history:history};
+ const json=JSON.stringify(backup);
+ try{localStorage.setItem(CLOUD_RECOVERY_KEY,json)}catch(e){throw Error('Could not save recovery copy. Export a backup before loading: '+e.message)}
+ return json;
+}
+function downloadCloudRecovery(json){
+ const blob=new Blob([json],{type:'application/json'}),url=URL.createObjectURL(blob);
+ const a=document.createElement('a');a.href=url;a.download='bacolod-warehouse-before-cloud-load-'+new Date().toISOString().slice(0,10)+'.json';
+ document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
+}
+function guardCloudReplace(remote){
+ if(data.length>0&&remote.length===0)throw Error('Safety block: Cloud has 0 records while this browser has '+data.length+'. Upload local records (merge) first. Nothing was deleted.');
+ if(data.length>0){const json=saveCloudRecovery();downloadCloudRecovery(json);return true}
+ return false;
+}
 $('cloudLoad').onclick=async()=>{
  if(cloudDirty){alert('Unsynced changes exist. Export a backup before loading.');return}
  try{cloudStatus('Loading…');const remote=await readCloud();
- if(!confirm(`Load ${remote.length} cloud records? This replaces the current browser view (${data.length} records). Export a backup first if needed.`)){cloudStatus('Connected');return}
- cloudEnabled=false;data=remote;rememberBaseline(remote);selected.clear();page=1;persist();cloudEnabled=true;render();cloudStatus('Cloud loaded: '+remote.length+' records');$('cloudModal').classList.add('hidden');
+ if(!confirm(`Load ${remote.length} cloud records? This will replace ${data.length} local records. A recovery backup will be downloaded and stored in this browser first.`)){cloudStatus('Connected');return}
+ guardCloudReplace(remote);cloudEnabled=false;data=remote;rememberBaseline(remote);selected.clear();page=1;persist();cloudEnabled=true;render();cloudStatus('Cloud loaded: '+remote.length+' records');$('cloudModal').classList.add('hidden');
  }catch(e){cloudStatus('Load failed');alert(e.message)}
 };
 $('cloudMigrate').onclick=async()=>{
@@ -539,7 +557,7 @@ $('cloudMigrate').onclick=async()=>{
 $('cloudSync').onclick=async()=>{
  if(!cloudToken){await cloudSignIn();return}
  if(cloudDirty){await flushCloud();return}
- try{let remote=await readCloud();cloudEnabled=false;data=remote;rememberBaseline(remote);persist();cloudEnabled=true;selected.clear();render();cloudStatus('Synced: '+remote.length+' records')}
+ try{let remote=await readCloud();if(data.length&&remote.length&&!confirm(`Sync will replace ${data.length} browser records with ${remote.length} cloud records. A backup will be downloaded first. Continue?`))return;guardCloudReplace(remote);cloudEnabled=false;data=remote;rememberBaseline(remote);persist();cloudEnabled=true;selected.clear();render();cloudStatus('Synced: '+remote.length+' records')}
  catch(e){cloudStatus('Sync failed');alert(e.message)}
 };
 window.addEventListener('beforeunload',e=>{if(cloudEnabled&&(cloudDirty||cloudBusy)){e.preventDefault();e.returnValue=''}});
