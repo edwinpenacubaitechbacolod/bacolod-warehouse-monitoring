@@ -328,7 +328,7 @@ body.dark #stockTab.active{background:#1b4137!important;border-color:#3b8c74!imp
 .month-nav .month-selector #prevMonth:hover,.month-nav .month-selector #nextMonth:hover{background:rgba(37,99,235,.11)!important;color:var(--accent)!important}
 .month-nav .month-selector #prevMonth:focus-visible,.month-nav .month-selector #nextMonth:focus-visible{outline:2px solid var(--accent)!important;outline-offset:1px!important}
 @media(max-width:650px){.month-nav .month-label{min-width:124px!important}}
-</style><style id="warehouse-brand-logo">.warehouse-brand{display:flex;align-items:center;gap:10px;min-width:0}.warehouse-brand-logo{width:34px;height:34px;object-fit:contain;flex:none;border-radius:9px}.warehouse-brand-text{min-width:0}@media(max-width:390px){.warehouse-brand-logo{width:29px;height:29px}.warehouse-brand{gap:7px}}</style><script src="https://accounts.google.com/gsi/client" async defer></script></head><body>
+</style><style id="warehouse-brand-logo">.warehouse-brand{display:flex;align-items:center;gap:10px;min-width:0}.warehouse-brand-logo{width:34px;height:34px;object-fit:contain;flex:none;border-radius:9px}.warehouse-brand-text{min-width:0}@media(max-width:390px){.warehouse-brand-logo{width:29px;height:29px}.warehouse-brand{gap:7px}}</style><style id="draft-autosave-style">#draftSaveState{font-size:.72rem;color:var(--muted);margin-right:auto;align-self:center}#draftSaveState[data-state="saved"]{color:#16845b}#draftSaveState[data-state="error"]{color:#c4483c}.draft-recovery{margin:0 0 12px;padding:9px 11px;border:1px solid var(--line);background:var(--soft);border-radius:9px;font-size:.78rem;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.draft-recovery span{flex:1}.draft-recovery button{min-height:28px;padding:4px 8px}</style><script src="https://accounts.google.com/gsi/client" async defer></script></head><body>
 <header><div class="warehouse-brand"><img class="warehouse-brand-logo" src="./logo.png" alt="Logistics Tracker logo"><div class="warehouse-brand-text"><h1>Bacolod Warehouse Monitoring</h1><div class="sub">Delivery Receipts & Stocks Transfers</div></div></div><div><button id="cloudConnect" type="button">☁ Connect Google</button> <button id="cloudSync" type="button" disabled title="Get latest records from Google Sheets">↻ Refresh from Cloud</button> <button id="cloudRetry" type="button" disabled hidden title="Retry uploading unsaved changes">↥ Retry Save</button> <span id="cloudState" class="hint" role="status">Local only</span> <button id="theme">☾ Theme</button> <button id="backup">Export backup</button> <button id="privacyInfo" aria-label="Data and privacy information" title="Data & Privacy">ⓘ</button></div></header>
 <main><div class="stats"><div class="card"><div class="sub">Total Records</div><div class="statnum" id="total">0</div></div><div class="card"><div class="sub">Pending</div><div class="statnum" id="pending">0</div></div><div class="card"><div class="sub">Received</div><div class="statnum" id="received">0</div></div><div class="card"><div class="sub">Delayed</div><div class="statnum" id="delayed">0</div></div></div>
 <div class="toolbar"><button class="active" id="deliveryTab">Delivery Monitoring</button><button id="stockTab">Stocks Transfer</button><input id="search" placeholder="Search DR No., Ref No., origin, destination…"><span class="filter-wrap"><select id="filter" aria-label="Filter records by status"><option value="">All statuses</option><option>PENDING</option><option>RECEIVED</option><option>CANCELLED</option><option>REJECTED</option><option>DELAYED</option></select><button type="button" id="filterTrigger" class="filter-trigger" aria-haspopup="listbox" aria-expanded="false"><span class="filter-dot"></span><span class="filter-label">All statuses</span><span class="filter-arrow">⌄</span></button></span><button class="primary" id="add">+ Add record</button><button id="importBtn">Import Excel / Paste</button><button id="exportCsv">Export CSV</button><button id="historyBtn">Import History</button></div>
@@ -344,16 +344,16 @@ body.dark #stockTab.active{background:#1b4137!important;border-color:#3b8c74!imp
 <p class="hint">Export a backup first. Cloud changes use record-level updates with conflict checks. Do not edit from two PCs simultaneously. Import history is browser-local.</p>
 <footer><button data-close="cloudModal">Close</button></footer></div></div>
 <div class="modal hidden" id="privacyModal"><div class="dialog"><h2>Data & Privacy</h2><p class="hint">Records start in this browser. After Google sign-in and explicit cloud migration, Google Sheets stores shared records. Export backups regularly; unsynced changes may remain local. Do not upload confidential company records to a public repository.</p><footer><button data-close="privacyModal">Close</button></footer></div></div>
-<div class="modal hidden" id="editor"><div class="dialog"><h2 id="editTitle">Add record</h2><div class="fields" id="editFields"></div><footer><button data-close="editor">Cancel</button><button class="primary" id="save">Save record</button></footer></div></div>
+<div class="modal hidden" id="editor"><div class="dialog"><h2 id="editTitle">Add record</h2><div id="draftRecovery" class="draft-recovery hidden"><span>Unfinished form found from your previous session.</span><button type="button" id="restoreDraft">Restore draft</button><button type="button" id="discardDraft">Discard</button></div><div class="fields" id="editFields"></div><footer><span id="draftSaveState" role="status">Draft protection on</span><button data-close="editor">Close</button><button class="primary" id="save">Save record</button></footer></div></div>
 <div class="modal hidden" id="importModal"><div class="dialog"><h2>Import records</h2><p class="hint" id="importHelp"></p><label class="btn">Choose Excel / CSV <input type="file" id="file" accept=".xlsx,.xls,.csv" style="display:none"></label><p class="hint" id="filename">No file selected</p><div class="import"><b>Or paste spreadsheet rows</b><p class="hint">Paste tab-separated rows from Excel, with or without column headers. This is an alternative to uploading a file.</p><textarea id="paste" placeholder="Paste spreadsheet rows here"></textarea></div><div class="notice hidden" id="importResult"></div><div id="importPreview" class="hidden"><div id="importWarning"></div><p class="hint" id="previewSummary"></p><label class="hint">Import destination <select id="importDestination"><option value="delivery">Delivery Monitoring</option><option value="stock">Stocks Transfer</option></select></label><div class="previewbox"><table><thead><tr><th>Date</th><th>No.</th><th>From</th><th>To</th><th>Remarks</th></tr></thead><tbody id="previewRows"></tbody></table></div></div><footer><button data-close="importModal">Close</button><button id="doImport">Preview records</button><button class="primary hidden" id="confirmImport">Confirm import</button></footer></div></div>
 <div class="modal hidden" id="historyModal"><div class="dialog wide"><h2>Import History</h2><p class="hint">Manage individual Excel batches. Actions affect only records from that import. Export a backup before major changes.</p><div id="historyList"></div><footer><button data-close="historyModal">Close</button></footer></div></div>
 <script>
 (()=>{
 'use strict';
 const KEY='bcd-monitor-v1', labels={delivery:['Trx Date','DR No.','From W/H','Ship To','Status','Received Date / Memo','Memo'],stock:['Trx Date','No','From','To','Status','Received Date / Memo','Remarks']};
-let cloudEnabled=false,cloudToken=null,cloudTimer=null,cloudBusy=false,cloudDirty=false;let selectedMonth=todayMonth(),data=load(),type='delivery',editing=null,selectedFile=null,page=1,selected=new Set(),pendingImport=null;const HISTORY_KEY='bcd-monitor-import-history-v1';let history=loadHistory();function loadHistory(){try{let h=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');return Array.isArray(h)?h:[]}catch{return []}}
+let cloudEnabled=false,cloudToken=null,cloudTimer=null,cloudBusy=false,cloudDirty=false;let selectedMonth=todayMonth(),data=load(),type='delivery',editing=null,selectedFile=null,page=1,selected=new Set(),pendingImport=null;const HISTORY_KEY='bcd-monitor-import-history-v1';const PENDING_KEY='bcd-monitor-cloud-pending-v2';let recoveredPending=localStorage.getItem(PENDING_KEY)==='1';cloudDirty=recoveredPending;let history=loadHistory();function loadHistory(){try{let h=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');return Array.isArray(h)?h:[]}catch{return []}}
 function load(){try{let a=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(a)?a:[]}catch{return []}}
-function persist(){try{localStorage.setItem(KEY,JSON.stringify(data));localStorage.setItem(HISTORY_KEY,JSON.stringify(history));if(cloudEnabled) scheduleCloudSave();return true}catch(e){alert('Could not save locally. Export a backup and free browser storage. '+e.message);return false}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(data));localStorage.setItem(HISTORY_KEY,JSON.stringify(history));if(cloudEnabled){localStorage.setItem(PENDING_KEY,'1');scheduleCloudSave()}return true}catch(e){alert('Could not save locally. Export a backup and free browser storage. '+e.message);return false}}
 const $=id=>document.getElementById(id),safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function todayMonth(){return today().slice(0,7)}
 function monthShift(delta){const [y,m]=selectedMonth.split('-').map(Number);const d=new Date(Date.UTC(y,m-1+delta,1));selectedMonth=d.toISOString().slice(0,7);page=1;selected.clear();render()}
@@ -369,8 +369,20 @@ $('rows').innerHTML=shown.map(r=>`<tr><td><input type="checkbox" data-action="se
 $('selectionCount').textContent=selected.size+' selected';$('count').textContent=`Showing ${visible.length?((page-1)*size+1):0}–${Math.min(page*size,visible.length)} of ${visible.length} matching records (${a.length} total)`;
 const monthly=a.filter(r=>selectedMonth===null||String(r.date||'').slice(0,7)===selectedMonth);$('total').textContent=monthly.length;for(let s of ['pending','received','delayed'])$(s).textContent=monthly.filter(r=>r.status===s.toUpperCase()).length;
 $('deliveryTab').classList.toggle('active',type==='delivery');$('stockTab').classList.toggle('active',type==='stock')}
-function openEditor(r){editing=r?.id||null;let names=labels[type];$('editTitle').textContent=editing?'Edit record':'Add record';$('editFields').innerHTML=[['date',names[0],'date'],['no',names[1],'text'],['from',names[2],'text'],['to',names[3],'text'],['status','Status','select'],['received','Received date (for Received status)','date'],['memo',names[6],'text']].map(([k,l,t])=>`<label>${safe(l)}${t==='select'?`<select id="e_${k}">${['PENDING','RECEIVED','CANCELLED','REJECTED','DELAYED'].map(s=>`<option ${r?.status===s?'selected':''}>${s}</option>`).join('')}</select>`:`<input id="e_${k}" type="${t}" value="${safe(r?.[k]||(k==='date'?today():''))}">`}</label>`).join('');$('editor').classList.remove('hidden')}
-function saveEditor(){let r=editing?data.find(x=>x.id===editing):null,old=r?.status||'';let obj={id:r?.id||crypto.randomUUID(),type,date:$('e_date').value,no:$('e_no').value.trim(),from:$('e_from').value.trim(),to:$('e_to').value.trim(),status:normStatus($('e_status').value),received:$('e_received').value,memo:$('e_memo').value.trim()};if(!obj.date||!obj.no){alert('Transaction date and number are required.');return}if(data.some(x=>x.type===type&&x.no.toLowerCase()===obj.no.toLowerCase()&&x.id!==obj.id)){alert('This transaction number already exists.');return}if(obj.status==='RECEIVED'&&!obj.received)obj.received=old==='RECEIVED'?r.received:today();if(obj.status!=='RECEIVED')obj.received='';if(r)Object.assign(r,obj);else data.push(obj);persist();$('editor').classList.add('hidden');render()}
+// Crash/F5 protection: drafts are local only and never become cloud records until Save record.
+const DRAFT_KEY='bcd-monitor-editor-draft-v1';
+let draftTimer=null,activeDraft=null;
+function readDraft(){try{const d=JSON.parse(localStorage.getItem(DRAFT_KEY)||'null');return d&&d.fields&&typeof d.fields==='object'?d:null}catch{return null}}
+function draftFields(){const fields={};for(const key of ['date','no','from','to','status','received','memo']){const el=$('e_'+key);if(el)fields[key]=el.value}return fields}
+function draftStatus(message,state='saved'){const el=$('draftSaveState');el.textContent=message;el.dataset.state=state}
+function saveDraftNow(){clearTimeout(draftTimer);if($('editor').classList.contains('hidden'))return;try{localStorage.setItem(DRAFT_KEY,JSON.stringify({type,editing,fields:draftFields(),updatedAt:new Date().toISOString()}));draftStatus('Draft saved locally • F5 protected')}catch(e){draftStatus('Draft could not be saved — check browser storage','error')}}
+function clearDraft(){clearTimeout(draftTimer);try{localStorage.removeItem(DRAFT_KEY)}catch{}activeDraft=null;$('draftRecovery').classList.add('hidden')}
+$('editFields').addEventListener('input',()=>{draftStatus('Saving draft…');clearTimeout(draftTimer);draftTimer=setTimeout(saveDraftNow,250)});
+$('editFields').addEventListener('change',saveDraftNow);
+$('restoreDraft').onclick=()=>{if(!activeDraft)return;const d=activeDraft;const draftType=d.type==='stock'?'stock':'delivery';const target=d.editing?data.find(r=>r.id===d.editing&&r.type===draftType):null;if(d.editing&&!target){alert('The original record for this draft no longer exists. The draft was not applied. Export a backup before making changes.');return}type=draftType;render();openEditor(target||null);editing=d.editing||null;for(const [k,v] of Object.entries(d.fields)){const el=$('e_'+k);if(el)el.value=String(v??'')}$('draftRecovery').classList.add('hidden');draftStatus('Draft restored • click Save record to confirm');saveDraftNow()};
+$('discardDraft').onclick=()=>{clearDraft();draftStatus('Previous draft discarded')};
+function openEditor(r){editing=r?.id||null;let names=labels[type];$('editTitle').textContent=editing?'Edit record':'Add record';$('editFields').innerHTML=[['date',names[0],'date'],['no',names[1],'text'],['from',names[2],'text'],['to',names[3],'text'],['status','Status','select'],['received','Received date (for Received status)','date'],['memo',names[6],'text']].map(([k,l,t])=>`<label>${safe(l)}${t==='select'?`<select id="e_${k}">${['PENDING','RECEIVED','CANCELLED','REJECTED','DELAYED'].map(s=>`<option ${r?.status===s?'selected':''}>${s}</option>`).join('')}</select>`:`<input id="e_${k}" type="${t}" value="${safe(r?.[k]||(k==='date'?today():''))}">`}</label>`).join('');$('editor').classList.remove('hidden');activeDraft=readDraft();$('draftRecovery').classList.toggle('hidden',!activeDraft);draftStatus(activeDraft?'Previous draft available to restore':'Draft protection on');}
+function saveEditor(){let r=editing?data.find(x=>x.id===editing):null,old=r?.status||'',previous=r?{...r}:null;let obj={id:r?.id||crypto.randomUUID(),type,date:$('e_date').value,no:$('e_no').value.trim(),from:$('e_from').value.trim(),to:$('e_to').value.trim(),status:normStatus($('e_status').value),received:$('e_received').value,memo:$('e_memo').value.trim()};if(!obj.date||!obj.no){alert('Transaction date and number are required.');return}if(data.some(x=>x.type===type&&x.no.toLowerCase()===obj.no.toLowerCase()&&x.id!==obj.id)){alert('This transaction number already exists.');return}if(obj.status==='RECEIVED'&&!obj.received)obj.received=old==='RECEIVED'?r.received:today();if(obj.status!=='RECEIVED')obj.received='';if(r)Object.assign(r,obj);else data.push(obj);if(!persist()){if(r)Object.assign(r,previous);else data=data.filter(x=>x.id!==obj.id);return}clearDraft();$('editor').classList.add('hidden');render()}
 function dateValue(v){if(v instanceof Date&&!isNaN(v))return `${v.getFullYear()}-${String(v.getMonth()+1).padStart(2,'0')}-${String(v.getDate()).padStart(2,'0')}`;if(typeof v==='number'&&v>20000&&v<100000&&window.XLSX){let d=XLSX.SSF.parse_date_code(v);if(d)return `${d.y}-${String(d.m).padStart(2,'0')}-${String(d.d).padStart(2,'0')}`}let s=String(v??'').trim();if(/^\d{4}-\d{2}-\d{2}/.test(s))return s.slice(0,10);let m=s.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);if(m)return `${m[3]}-${m[1].padStart(2,'0')}-${m[2].padStart(2,'0')}`;return ''}
 function normalizeHeader(s){return String(s??'').trim().toLowerCase().replace(/[^a-z0-9]/g,'')}
 function headerIndex(row,names){return row.findIndex(x=>names.includes(normalizeHeader(x)))}
@@ -395,7 +407,7 @@ $('selectPage').onclick=()=>{document.querySelectorAll('#rows input[data-action=
 $('clearSelection').onclick=()=>{selected.clear();render()};
 $('moveSelected').onclick=()=>moveRecords([...selected],type==='delivery'?'stock':'delivery');
 $('deleteSelected').onclick=()=>deleteRecords([...selected]);
-document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>$(b.dataset.close).classList.add('hidden'));
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>{if(b.dataset.close==='editor')saveDraftNow();$(b.dataset.close).classList.add('hidden')});
 function resetPreview(){$('importPreview').classList.add('hidden');$('confirmImport').classList.add('hidden');$('doImport').classList.remove('hidden');pendingImport=null}
 $('importBtn').onclick=()=>{resetPreview();$('importModal').classList.remove('hidden');$('importResult').classList.add('hidden');$('importDestination').value=type;$('importHelp').textContent=type==='delivery'?'Delivery export: Trx Date, No, From W/H, Ship To, Memo. Other columns are ignored.':'Stocks Transfer export: Trx Date, No, From, To. Other columns are ignored.'};
 $('file').onchange=e=>{selectedFile=e.target.files[0]||null;$('filename').textContent=selectedFile?.name||'No file selected';resetPreview()};
@@ -433,7 +445,7 @@ function updateCloudControls(){
  if(!refresh||!retry)return;
  refresh.disabled=!cloudToken||cloudBusy||cloudDirty;
  retry.hidden=!cloudDirty;
- retry.disabled=!cloudToken||cloudBusy||!cloudDirty;
+ retry.disabled=!cloudToken||cloudBusy||!cloudDirty||recoveredPending;
  retry.setAttribute('aria-label','Retry saving unsynced changes to Google Sheets');
 }
 function sheetRange(name){return "'"+name.replace(/'/g,"''")+"'!A:J"}
@@ -497,7 +509,7 @@ async function writeCloud(snapshot){
 }
 function scheduleCloudSave(){
  if(!cloudEnabled)return;
- cloudDirty=true;cloudStatus('Unsynced changes');
+ cloudDirty=true;try{localStorage.setItem(PENDING_KEY,'1')}catch{}cloudStatus('Unsynced changes');
  clearTimeout(cloudTimer);cloudTimer=setTimeout(flushCloud,900);
 }
 async function flushCloud(){
@@ -505,8 +517,8 @@ async function flushCloud(){
  cloudBusy=true;cloudDirty=false;updateCloudControls();
  const snapshot=JSON.parse(JSON.stringify(data));
  cloudStatus('Saving…');
- try{await writeCloud(snapshot);cloudEnabled=true;cloudStatus('Saved to Google Sheets')}
- catch(e){cloudDirty=true;cloudEnabled=false;cloudStatus('Save failed — cloud paused; local copy kept');alert('Cloud save failed. Your browser copy remains. Export a backup, then use Retry Save.\n'+e.message)}
+ try{await writeCloud(snapshot);cloudEnabled=true;if(!cloudDirty){try{localStorage.removeItem(PENDING_KEY)}catch{}}cloudStatus(cloudDirty?'New changes waiting to sync':'Saved to Google Sheets')}
+ catch(e){cloudDirty=true;try{localStorage.setItem(PENDING_KEY,'1')}catch{}cloudEnabled=false;cloudStatus('Save failed — cloud paused; local copy kept');alert('Cloud save failed. Your browser copy remains. Export a backup, then use Retry Save.\n'+e.message)}
  finally{cloudBusy=false;updateCloudControls();if(cloudDirty&&cloudEnabled){cloudStatus('Unsynced changes');clearTimeout(cloudTimer);cloudTimer=setTimeout(flushCloud,1200)}}
 }
 let silentReconnectAttempted=false;
@@ -569,10 +581,10 @@ function guardCloudReplace(remote){
  return false;
 }
 $('cloudLoad').onclick=async()=>{
- if(cloudDirty){alert('Unsynced changes exist. Export a backup before loading.');return}
+ if(cloudDirty||recoveredPending){alert('Unsynced changes may exist on this browser. Export a backup and reconcile records before loading cloud data.');return}
  try{cloudStatus('Loading…');const remote=await readCloud();
  if(!confirm(`Load ${remote.length} cloud records? This will replace ${data.length} local records. A recovery backup will be downloaded and stored in this browser first.`)){cloudStatus('Connected');return}
- guardCloudReplace(remote);cloudEnabled=false;data=remote;rememberBaseline(remote);selected.clear();page=1;persist();cloudEnabled=true;render();cloudStatus('Cloud loaded: '+remote.length+' records');$('cloudModal').classList.add('hidden');
+ guardCloudReplace(remote);cloudEnabled=false;data=remote;rememberBaseline(remote);selected.clear();page=1;persist();cloudEnabled=true;try{localStorage.removeItem(PENDING_KEY)}catch{}recoveredPending=false;cloudDirty=false;render();cloudStatus('Cloud loaded: '+remote.length+' records');$('cloudModal').classList.add('hidden');
  }catch(e){cloudStatus('Load failed');alert(e.message)}
 };
 $('cloudMigrate').onclick=async()=>{
@@ -583,13 +595,13 @@ $('cloudMigrate').onclick=async()=>{
  let unique=[];for(let r of additions){let key=r.type+'|'+r.no.trim().toLowerCase();if(!seen.has(key)){seen.add(key);unique.push(r)}}
  if(!confirm(`Upload ${unique.length} new local records to Google Sheets? ${data.length-unique.length} matching/duplicate local records will not overwrite cloud records. Export a backup before proceeding.`)){cloudStatus('Connected');return}
  cloudStatus('Uploading…');rememberBaseline(remote);let merged=remote.concat(unique);await writeCloud(merged);
- cloudEnabled=false;data=merged;persist();cloudEnabled=true;selected.clear();page=1;render();cloudStatus('Saved to Google Sheets');$('cloudModal').classList.add('hidden');
+ cloudEnabled=false;data=merged;persist();cloudEnabled=true;try{localStorage.removeItem(PENDING_KEY)}catch{}recoveredPending=false;cloudDirty=false;selected.clear();page=1;render();cloudStatus('Saved to Google Sheets');$('cloudModal').classList.add('hidden');
  }catch(e){cloudStatus('Upload failed — local data kept');alert(e.message)}
  finally{cloudBusy=false}
 };
 $('cloudSync').onclick=async()=>{
  if(cloudBusy)return;
- if(cloudDirty){alert('Unsaved changes are waiting. Use Retry Save or export a backup before refreshing.');return}
+ if(cloudDirty||recoveredPending){alert('Local changes may not be in Google Sheets. Export a backup and reconcile before refreshing.');return}
  if(!cloudToken){await cloudSignIn();return}
  cloudBusy=true;updateCloudControls();
  try{
@@ -598,18 +610,20 @@ $('cloudSync').onclick=async()=>{
   if(data.length&&remote.length&&!confirm(`Refresh will replace ${data.length} browser records with ${remote.length} cloud records. A backup will be downloaded first. Continue?`)){cloudStatus('Refresh cancelled');return}
   guardCloudReplace(remote);
   cloudEnabled=false;data=remote;rememberBaseline(remote);persist();cloudEnabled=true;
-  selected.clear();page=1;render();cloudStatus('Refreshed: '+remote.length+' records');
+  try{localStorage.removeItem(PENDING_KEY)}catch{}recoveredPending=false;cloudDirty=false;selected.clear();page=1;render();cloudStatus('Refreshed: '+remote.length+' records');
  }catch(e){cloudStatus('Refresh failed');alert(e.message)}
  finally{cloudBusy=false;updateCloudControls()}
 };
 $('cloudRetry').onclick=async()=>{
  if(cloudBusy||!cloudDirty)return;
+ if(recoveredPending){alert('Changes survived a previous page refresh. For safety, export a backup and use Upload local records (merge) after connecting Google. Automatic retry is blocked because the earlier cloud baseline was lost.');return}
  if(!cloudToken){alert('Google session expired. Click Connect Google to sign in again, then Retry Save.');return}
  await flushCloud();
 };
-window.addEventListener('beforeunload',e=>{if(cloudDirty||cloudBusy){e.preventDefault();e.returnValue=''}});
+window.addEventListener('beforeunload',e=>{if(cloudDirty||cloudBusy||(!$('editor').classList.contains('hidden')&&Object.values(draftFields()).some(Boolean))){saveDraftNow();e.preventDefault();e.returnValue=''}});
 
 render();
+if(recoveredPending)cloudStatus('Local changes need reconciliation — export backup');
 updateCloudControls();
 })();
 </script></body></html>
