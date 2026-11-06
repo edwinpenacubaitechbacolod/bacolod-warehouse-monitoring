@@ -509,21 +509,46 @@ async function flushCloud(){
  catch(e){cloudDirty=true;cloudEnabled=false;cloudStatus('Save failed — cloud paused; local copy kept');alert('Cloud save failed. Your browser copy remains. Export a backup, then use Retry Save.\n'+e.message)}
  finally{cloudBusy=false;updateCloudControls();if(cloudDirty&&cloudEnabled){cloudStatus('Unsynced changes');clearTimeout(cloudTimer);cloudTimer=setTimeout(flushCloud,1200)}}
 }
-async function cloudSignIn(){
- if(!window.google?.accounts?.oauth2){alert('Google Sign-In is still loading. Please retry.');return}
+let silentReconnectAttempted=false;
+function initCloudTokenClient(){
+ if(!window.google?.accounts?.oauth2)return false;
  if(!cloudTokenClient)cloudTokenClient=google.accounts.oauth2.initTokenClient({
- client_id:CLOUD_CLIENT_ID,scope:CLOUD_SCOPE,
- callback:async response=>{
- if(response.error){alert('Google sign-in failed: '+response.error);return}
- cloudToken=response.access_token;
- cloudStatus('Connected — choose load or upload');
- updateCloudControls();
- $('cloudModal').classList.remove('hidden');
- try{let remote=await readCloud();$('cloudSummary').textContent=`Google Sheets has ${remote.length} records. This browser has ${data.length} records. Choose Load to use cloud data, or Upload local records to merge without overwriting matching cloud transaction numbers.`}
- catch(e){$('cloudSummary').textContent='Could not read spreadsheet: '+e.message}
- }});
- cloudTokenClient.requestAccessToken({prompt:'consent'});
+  client_id:CLOUD_CLIENT_ID,scope:CLOUD_SCOPE,
+  callback:async response=>{
+   if(response.error){
+    cloudStatus('Local only — click Connect Google');
+    return;
+   }
+   cloudToken=response.access_token;
+   cloudStatus('Connected — choose load or upload');
+   updateCloudControls();
+   $('cloudModal').classList.remove('hidden');
+   try{
+    let remote=await readCloud();
+    $('cloudSummary').textContent=`Google Sheets has ${remote.length} records. This browser has ${data.length} records. Choose Load to use cloud data, or Upload local records to merge without overwriting matching cloud transaction numbers.`;
+   }catch(e){$('cloudSummary').textContent='Could not read spreadsheet: '+e.message}
+  },
+  error_callback:()=>{cloudStatus('Local only — click Connect Google')}
+ });
+ return true;
 }
+async function cloudSignIn(){
+ if(!initCloudTokenClient()){alert('Google Sign-In is still loading. Please retry.');return}
+ cloudTokenClient.requestAccessToken({prompt:''});
+}
+function trySilentReconnect(){
+ if(silentReconnectAttempted||cloudToken)return;
+ if(!initCloudTokenClient())return;
+ silentReconnectAttempted=true;
+ // GIS may refuse a silent token request depending on browser/account policy.
+ // This never overwrites local data or silently enables cloud writes.
+ try{cloudTokenClient.requestAccessToken({prompt:''})}
+ catch(e){cloudStatus('Local only — click Connect Google')}
+}
+window.addEventListener('load',()=>{
+ if(initCloudTokenClient())trySilentReconnect();
+ else cloudStatus('Local only — click Connect Google');
+});
 $('cloudConnect').onclick=cloudSignIn;
 // Preserve a separate recovery snapshot before any cloud-to-browser replacement.
 const CLOUD_RECOVERY_KEY='bcd-monitor-pre-cloud-load-backup-v1';
