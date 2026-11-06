@@ -232,11 +232,105 @@ body.dark #stockTab.active{background:#1c423b;color:#a3ebd0;border-color:#438b76
 .dialog{box-shadow:0 24px 70px rgba(9,25,48,.25)}
 @media(prefers-reduced-motion:reduce){.card,button,.btn,.tablewrap tbody tr{transition:none}.card:hover{transform:none}}
 </style>
-</head><body>
-<header><div><h1>▣ Bacolod Warehouse Monitoring</h1><div class="sub">Delivery Receipts & Stocks Transfers</div></div><div><button id="theme">☾ Theme</button> <button id="backup">Export backup</button> <button id="privacyInfo" aria-label="Data and privacy information" title="Data & Privacy">ⓘ</button></div></header>
+<style id="centered-kpi-refinement">
+/* Symmetrical, compact summary cards in both themes */
+.stats .card{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:4px;min-height:69px;padding:9px 12px}
+.stats .card .sub{width:100%;text-align:center;margin:0;font-size:.71rem;letter-spacing:.025em;font-weight:600}
+.stats .card .statnum{width:100%;text-align:center;margin:0;font-size:1.48rem;line-height:1.18;font-weight:750;font-variant-numeric:tabular-nums}
+@media(max-width:600px){.stats .card{min-height:62px;padding:8px 6px}.stats .card .statnum{font-size:1.3rem}.stats .card .sub{font-size:.66rem}}
+</style>
+<style id="toolbar-premium-2026">
+/* Premium, data-first toolbar: deliberately small controls */
+.toolbar{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:10px 0 9px!important}
+.toolbar>button,.toolbar>.filter-wrap,.toolbar>#search,.toolbar #filterTrigger{height:34px!important;min-height:34px!important;box-sizing:border-box!important}
+.toolbar>button,.toolbar #filterTrigger{border-radius:9px!important;padding:6px 11px!important;font-size:12px!important;font-weight:650!important;letter-spacing:-.012em;transition:background .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease!important}
+.toolbar>button:hover,.toolbar #filterTrigger:hover{transform:translateY(-1px);box-shadow:0 3px 9px rgba(26,53,88,.09)!important}
+.toolbar>button:active,.toolbar #filterTrigger:active{transform:translateY(0)}
+#deliveryTab,#stockTab{background:var(--panel)!important;border:1px solid var(--line)!important;box-shadow:none!important}
+#deliveryTab.active{background:#eaf2ff!important;border-color:#9dc2ff!important;color:#1756af!important;box-shadow:inset 0 -2px #3478df!important}
+#stockTab.active{background:#e6f7f0!important;border-color:#92d6b8!important;color:#087a59!important;box-shadow:inset 0 -2px #18a779!important}
+body.dark #deliveryTab.active{background:#223e5f!important;border-color:#5685bd!important;color:#c1dcff!important}
+body.dark #stockTab.active{background:#1b4137!important;border-color:#3b8c74!important;color:#b3f0d4!important}
+.toolbar #search{flex:1 1 240px!important;min-width:190px!important;border-radius:9px!important;border:1px solid var(--line)!important;background-color:var(--panel)!important;padding:6px 12px 6px 33px!important;font-size:12px!important;box-shadow:0 1px 2px rgba(20,40,65,.025)!important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238296aa' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-4-4'/%3E%3C/svg%3E")!important;background-repeat:no-repeat!important;background-position:11px center!important}
+.toolbar #search:focus{outline:none!important;border-color:var(--accent)!important;box-shadow:0 0 0 3px rgba(52,120,223,.11)!important}
+.toolbar #filterTrigger{min-width:132px!important;background:var(--panel)!important;box-shadow:none!important}
+.toolbar #filterTrigger[aria-expanded="true"]{border-color:var(--accent)!important;box-shadow:0 0 0 3px rgba(52,120,223,.10)!important}
+.filter-trigger .filter-arrow{display:inline-block;transition:transform .22s ease!important;font-size:15px}
+.filter-trigger[aria-expanded="true"] .filter-arrow{transform:rotate(180deg)}
+.toolbar #add{background:linear-gradient(135deg,#2469d9,#1858c2)!important;border-color:#2469d9!important;color:#fff!important;box-shadow:0 2px 6px rgba(28,98,205,.15)!important}
+.toolbar #add:hover{box-shadow:0 4px 12px rgba(28,98,205,.22)!important}
+.toolbar #importBtn,.toolbar #exportCsv,.toolbar #historyBtn{background:var(--panel)!important}
+.filter-popover,.status-popover{border-radius:12px!important;border:1px solid var(--line)!important;box-shadow:0 12px 32px rgba(15,38,65,.16)!important;animation:menuEnter .18s cubic-bezier(.2,.8,.2,1) both;transform-origin:top center}
+.filter-option,.status-choice{min-height:35px!important;border-radius:8px!important;transition:background .15s ease,transform .15s ease!important}
+.filter-option:hover,.status-choice:hover{transform:translateX(2px)}
+.filter-option[aria-selected="true"]{font-weight:700!important}
+@keyframes menuEnter{from{opacity:0;transform:translateY(-5px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(prefers-reduced-motion:reduce){.filter-popover,.status-popover{animation:none!important}.toolbar>button,.toolbar #filterTrigger,.filter-option,.status-choice{transition:none!important;transform:none!important}}
+@media(max-width:700px){.toolbar{gap:6px!important}.toolbar #deliveryTab,.toolbar #stockTab{flex:1 1 auto!important}.toolbar #search{order:2!important;flex:1 1 100%!important;min-width:0!important}.toolbar #filterTrigger{min-width:122px!important}.toolbar>button,.toolbar #filterTrigger{font-size:11.5px!important;padding-left:9px!important;padding-right:9px!important}}
+</style>
+<style id="centered-navigation-controls-2026">
+/* Uniform, perfectly centered navigation and dropdown chevrons */
+.month-nav #prevMonth,.month-nav #nextMonth,.pagecontrols #prevPage,.pagecontrols #nextPage{
+ display:inline-grid!important;place-items:center!important;flex:0 0 30px!important;
+ width:30px!important;min-width:30px!important;height:30px!important;min-height:30px!important;
+ padding:0!important;margin:0!important;line-height:1!important;font-size:0!important;
+ border:1px solid var(--line)!important;border-radius:9px!important;
+ background:var(--panel)!important;color:var(--text)!important;
+ box-shadow:0 1px 2px rgba(18,38,65,.045);vertical-align:middle;
+ transition:background .18s,border-color .18s,box-shadow .18s,transform .18s;
+}
+.month-nav #prevMonth::before,.pagecontrols #prevPage::before,
+.month-nav #nextMonth::before,.pagecontrols #nextPage::before{
+ content:"";display:block;width:7px;height:7px;border-top:1.8px solid currentColor;
+ border-right:1.8px solid currentColor;transform:rotate(225deg);margin-left:3px;
+}
+.month-nav #nextMonth::before,.pagecontrols #nextPage::before{transform:rotate(45deg);margin-left:-3px}
+.month-nav #prevMonth:hover,.month-nav #nextMonth:hover,.pagecontrols #prevPage:hover,.pagecontrols #nextPage:hover{
+ background:var(--soft)!important;border-color:var(--accent)!important;color:var(--accent)!important;
+ box-shadow:0 2px 7px rgba(32,95,170,.10);
+}
+.month-nav button:disabled,.pagecontrols button:disabled{opacity:.4!important;box-shadow:none!important;cursor:not-allowed!important}
+.filter-trigger{display:inline-flex!important;align-items:center!important;justify-content:space-between!important;gap:9px!important}
+.filter-trigger .filter-label{display:block;flex:1;text-align:left}
+.filter-trigger .filter-arrow{display:inline-grid!important;place-items:center!important;width:19px!important;height:19px!important;
+ font-size:0!important;line-height:1!important;flex:none;border-radius:6px;background:var(--soft);
+ transition:transform .2s ease,background .2s ease!important}
+.filter-trigger .filter-arrow::before{content:"";width:6px;height:6px;display:block;border-right:1.7px solid currentColor;
+ border-bottom:1.7px solid currentColor;transform:translateY(-2px) rotate(45deg)}
+.filter-trigger[aria-expanded="true"] .filter-arrow{transform:rotate(180deg);background:var(--soft)}
+.status-trigger .status-chevron{display:inline-grid;place-items:center;width:17px;height:17px;font-size:0!important;flex:none}
+.status-trigger .status-chevron::before{content:"";width:6px;height:6px;border-right:1.6px solid currentColor;
+ border-bottom:1.6px solid currentColor;transform:translateY(-2px) rotate(45deg)}
+.month-nav,.pagecontrols{align-items:center!important}
+@media(max-width:600px){.month-nav #prevMonth,.month-nav #nextMonth,.pagecontrols #prevPage,.pagecontrols #nextPage{width:29px!important;min-width:29px!important;height:29px!important;min-height:29px!important}}
+</style><style id="unified-month-selector-final">
+/* A single cohesive control, with understated, centered chevrons. */
+.month-nav{gap:7px!important;margin-left:auto!important;justify-content:flex-end!important}
+.month-nav .month-selector{display:inline-flex;align-items:center;justify-content:center;gap:0;background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:2px;min-height:32px;box-shadow:0 1px 2px rgba(20,40,70,.035)}
+.month-nav .month-label{display:inline-flex;align-items:center;justify-content:center;min-width:135px;padding:0 8px;font-size:.77rem;font-weight:700;line-height:28px;white-space:nowrap;text-align:center}
+.month-nav .month-selector #prevMonth,.month-nav .month-selector #nextMonth{width:27px!important;min-width:27px!important;height:27px!important;min-height:27px!important;flex:0 0 27px!important;border:0!important;border-radius:6px!important;box-shadow:none!important;background:transparent!important;padding:0!important;display:inline-grid!important;place-items:center!important}
+.month-nav .month-selector #prevMonth:hover,.month-nav .month-selector #nextMonth:hover{background:var(--soft)!important;color:var(--accent)!important;transform:none!important}
+.month-nav .month-selector #prevMonth::before,.month-nav .month-selector #nextMonth::before{width:6px;height:6px;border-width:1.7px;margin:0!important}
+.month-nav .month-selector #prevMonth::before{transform:translateX(1px) rotate(225deg)!important}
+.month-nav .month-selector #nextMonth::before{transform:translateX(-1px) rotate(45deg)!important}
+.month-nav #allMonths{height:32px!important;min-height:32px!important;padding:0 10px!important;border-radius:8px!important;font-size:.73rem!important}
+@media(max-width:650px){.month-nav{width:100%;justify-content:center!important;margin-left:0!important}.month-nav .month-label{min-width:128px}}
+</style>
+<style id="segmented-month-style-1">
+/* Unified premium segmented navigator: equal hit targets, centered label. */
+.month-nav .month-selector{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:3px!important;padding:3px!important;border:1px solid var(--line)!important;border-radius:10px!important;background:var(--panel)!important;box-shadow:0 1px 3px rgba(24,47,74,.06)!important;min-height:36px!important}
+.month-nav .month-label{display:flex!important;align-items:center!important;justify-content:center!important;min-width:135px!important;height:29px!important;padding:0 10px!important;line-height:1.1!important;font-size:.78rem!important;text-align:center!important;font-weight:700!important;white-space:nowrap!important}
+.month-nav .month-selector #prevMonth,.month-nav .month-selector #nextMonth{display:flex!important;align-items:center!important;justify-content:center!important;width:29px!important;min-width:29px!important;height:29px!important;min-height:29px!important;flex:0 0 29px!important;margin:0!important;padding:0!important;border:0!important;border-radius:7px!important;background:var(--soft)!important;box-shadow:none!important;color:var(--muted)!important;font-size:0!important;line-height:0!important;transition:background .15s,color .15s!important}
+.month-nav .month-selector #prevMonth::before,.month-nav .month-selector #nextMonth::before{content:""!important;display:block!important;position:static!important;width:7px!important;height:7px!important;margin:0!important;border:solid currentColor!important;border-width:0 1.7px 1.7px 0!important;transform:translateX(1px) rotate(135deg)!important}
+.month-nav .month-selector #nextMonth::before{transform:translateX(-1px) rotate(-45deg)!important}
+.month-nav .month-selector #prevMonth:hover,.month-nav .month-selector #nextMonth:hover{background:rgba(37,99,235,.11)!important;color:var(--accent)!important}
+.month-nav .month-selector #prevMonth:focus-visible,.month-nav .month-selector #nextMonth:focus-visible{outline:2px solid var(--accent)!important;outline-offset:1px!important}
+@media(max-width:650px){.month-nav .month-label{min-width:124px!important}}
+</style></head><body>
+<header><div><h1>Bacolod Warehouse Monitoring</h1><div class="sub">Delivery Receipts & Stocks Transfers</div></div><div><button id="theme">☾ Theme</button> <button id="backup">Export backup</button> <button id="privacyInfo" aria-label="Data and privacy information" title="Data & Privacy">ⓘ</button></div></header>
 <main><div class="stats"><div class="card"><div class="sub">Total Records</div><div class="statnum" id="total">0</div></div><div class="card"><div class="sub">Pending</div><div class="statnum" id="pending">0</div></div><div class="card"><div class="sub">Received</div><div class="statnum" id="received">0</div></div><div class="card"><div class="sub">Delayed</div><div class="statnum" id="delayed">0</div></div></div>
 <div class="toolbar"><button class="active" id="deliveryTab">Delivery Monitoring</button><button id="stockTab">Stocks Transfer</button><input id="search" placeholder="Search DR No., Ref No., origin, destination…"><span class="filter-wrap"><select id="filter" aria-label="Filter records by status"><option value="">All statuses</option><option>PENDING</option><option>RECEIVED</option><option>CANCELLED</option><option>REJECTED</option><option>DELAYED</option></select><button type="button" id="filterTrigger" class="filter-trigger" aria-haspopup="listbox" aria-expanded="false"><span class="filter-dot"></span><span class="filter-label">All statuses</span><span class="filter-arrow">⌄</span></button></span><button class="primary" id="add">+ Add record</button><button id="importBtn">Import Excel / Paste</button><button id="exportCsv">Export CSV</button><button id="historyBtn">Import History</button></div>
-<section class="panel" id="monitorPanel"><div class="batchbar"><button id="selectPage">Select page</button><button id="clearSelection">Clear selection</button><button id="moveSelected">Move selected</button><button id="deleteSelected">Delete selected</button><span class="hint" id="selectionCount">0 selected</span></div><div id="monitorHeading"><span id="monitorIcon" aria-hidden="true">🚚</span><div id="monitorHeadingText"><h2 id="tableTitle">Delivery Monitoring</h2><span id="monitorSubtitle">Delivery Receipts · DR</span></div><span id="monitorBadge">DR</span><div class="month-nav" aria-label="Transaction month filter"><button id="prevMonth" type="button" title="Previous month" aria-label="Previous month">‹</button><span class="month-label" id="monthLabel" aria-live="polite"></span><button id="nextMonth" type="button" title="Next month" aria-label="Next month">›</button><button id="allMonths" type="button" class="month-all" title="Show records from all months">All Months</button></div></div><div class="tablewrap"><table><thead id="head"></thead><tbody id="rows"></tbody></table></div><div class="pagebar"><p class="hint" id="count"></p><div class="pagecontrols"><label class="hint" for="pageSize">Rows</label><select id="pageSize"><option>25</option><option selected>50</option><option>100</option></select><button id="prevPage" aria-label="Previous page">‹</button><span class="hint" id="pageLabel">1 / 1</span><button id="nextPage" aria-label="Next page">›</button></div></div></section>
+<section class="panel" id="monitorPanel"><div class="batchbar"><button id="selectPage">Select page</button><button id="clearSelection">Clear selection</button><button id="moveSelected">Move selected</button><button id="deleteSelected">Delete selected</button><span class="hint" id="selectionCount">0 selected</span></div><div id="monitorHeading"><span id="monitorIcon" aria-hidden="true">🚚</span><div id="monitorHeadingText"><h2 id="tableTitle">Delivery Monitoring</h2><span id="monitorSubtitle">Delivery Receipts · DR</span></div><span id="monitorBadge">DR</span><div class="month-nav" aria-label="Transaction month filter"><span class="month-selector"><button id="prevMonth" type="button" title="Previous month" aria-label="Previous month">‹</button><span class="month-label"><span id="monthLabel" aria-live="polite"></span></span><button id="nextMonth" type="button" title="Next month" aria-label="Next month">›</button></span><button id="allMonths" type="button" class="month-all" title="Show records from all months">All Months</button></div></div><div class="tablewrap"><table><thead id="head"></thead><tbody id="rows"></tbody></table></div><div class="pagebar"><p class="hint" id="count"></p><div class="pagecontrols"><label class="hint" for="pageSize">Rows</label><select id="pageSize"><option>25</option><option selected>50</option><option>100</option></select><button id="prevPage" aria-label="Previous page">‹</button><span class="hint" id="pageLabel">1 / 1</span><button id="nextPage" aria-label="Next page">›</button></div></div></section>
 </main>
 <div class="modal hidden" id="privacyModal"><div class="dialog"><h2>Data & Privacy</h2><p class="hint">This starter stores data in this browser only. Back up your records regularly. GitHub Pages does not synchronize records across devices; shared access requires a secured database connection. Do not upload confidential company records to a public repository.</p><footer><button data-close="privacyModal">Close</button></footer></div></div>
 <div class="modal hidden" id="editor"><div class="dialog"><h2 id="editTitle">Add record</h2><div class="fields" id="editFields"></div><footer><button data-close="editor">Cancel</button><button class="primary" id="save">Save record</button></footer></div></div>
