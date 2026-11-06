@@ -157,11 +157,86 @@ main{padding:9px 14px!important;max-width:1800px!important}
 .pagecontrols button,.pagecontrols select{min-height:27px!important;padding:3px 7px!important}
 @media(max-width:700px){main{padding:8px!important}.stats{gap:5px!important}.stats .card{padding:7px!important;min-height:54px!important}.stats .statnum{font-size:1.1rem!important}.toolbar{gap:5px!important}.toolbar #search{order:2!important;flex-basis:100%!important}.tablewrap{max-height:calc(100dvh - 295px)!important;min-height:260px!important}#monitorPanel{padding:7px!important}}
 </style>
+<style id="month-navigation-style">
+.month-nav{display:flex;align-items:center;gap:5px;margin-left:auto;flex-wrap:nowrap}
+.month-nav button{min-height:28px!important;height:28px!important;padding:4px 8px!important;font-size:.74rem!important}
+.month-label{font-size:.8rem;font-weight:750;min-width:118px;text-align:center;white-space:nowrap;font-variant-numeric:tabular-nums}
+.month-nav .month-all{font-weight:650;color:var(--accent)}
+.month-nav .month-all.active-month{background:var(--soft);border-color:var(--accent)}
+@media(max-width:650px){#monitorHeading{flex-wrap:wrap!important;height:auto!important}.month-nav{width:100%;justify-content:flex-end}.month-label{min-width:108px}}
+</style>
+<style id="alignment-consistency-final">
+/* Shared compact dimensions across controls and panels */
+:root{--control-h:32px;--control-radius:8px;--control-gap:6px}
+header{padding:8px 16px;min-height:52px;gap:10px}
+header>div:last-child{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+header>div:last-child button{margin:0}
+main{padding:10px 14px}
+.stats{gap:7px}.stats .card{min-height:60px;padding:9px 12px;border-radius:9px}
+.stats .statnum{font-size:1.27rem;line-height:1.15;margin-top:4px}
+.toolbar{gap:6px;margin:9px 0 8px;align-items:center}
+button,.btn,input:not([type="checkbox"]):not([type="file"]),select{min-height:32px;border-radius:8px;font-size:.76rem}
+button,.btn{padding:6px 9px}
+.toolbar>button,.toolbar>.filter-wrap,.toolbar>#search,.filter-wrap #filterTrigger,#deliveryTab,#stockTab{height:32px;min-height:32px;padding-top:5px;padding-bottom:5px}
+#monitorPanel{padding:10px 12px;border-radius:10px}
+#monitorHeading{min-height:32px;gap:8px;margin:0 0 8px;align-items:center}
+#monitorIcon{width:29px;height:29px;border-radius:7px;font-size:15px}
+#tableTitle{font-size:.86rem;line-height:1.15}
+#monitorSubtitle{font-size:.67rem}
+#monitorBadge{padding:3px 6px;font-size:.65rem}
+.month-nav{gap:5px;margin-left:auto;align-items:center}
+.month-nav button{height:30px!important;min-height:30px!important;min-width:30px;padding:4px 8px!important;border-radius:7px!important}
+.month-label{min-width:126px;font-size:.78rem;font-weight:750;padding:0 4px;text-align:center}
+.batchbar{gap:6px;margin:0 0 8px!important;padding:0 0 8px!important}
+.batchbar button{min-height:30px;padding:5px 9px;font-size:.74rem}
+#selectionCount{min-height:30px;font-size:.73rem}
+.tablewrap{border-radius:8px;max-height:calc(100vh - 268px);min-height:240px}
+.tablewrap th,.tablewrap td{padding:6px 8px}
+.tablewrap .actions button,.tablewrap .status-trigger{min-height:27px}
+.pagebar{margin-top:7px}.pagecontrols button,.pagecontrols select{min-height:29px}
+@media(max-width:700px){main{padding:8px}.stats{gap:5px}.stats .card{padding:8px;min-height:56px}.toolbar{gap:5px}#monitorPanel{padding:8px}#monitorHeading{flex-wrap:wrap;gap:6px}.month-nav{width:100%;justify-content:flex-end}.month-label{min-width:112px}.tablewrap{max-height:65vh}.batchbar button{flex:0 1 auto}}
+</style>
+<style id="classy-data-first-2026">
+/* Restrained premium visual refresh: compact proportions remain unchanged. */
+:root{--panel:#ffffff;--line:#dce5f0;--text:#17283d;--muted:#667a90;--accent:#2864c5;--soft:#f4f7fc;--hover:#eef4fd}
+body{background:linear-gradient(145deg,#f4f7fc 0%,#edf3fa 100%);font-feature-settings:"tnum" 1;-webkit-font-smoothing:antialiased}
+body.dark{--panel:#182536;--line:#30445b;--text:#ecf3fd;--muted:#a6b8cc;--accent:#82b1ff;--soft:#202f42;--hover:#293d54;background:linear-gradient(145deg,#0d1724,#152337)}
+header{box-shadow:0 2px 16px rgba(26,54,91,.045);border-bottom-color:var(--line)}
+header h1{font-weight:780;letter-spacing:-.035em}
+.card,.panel{box-shadow:0 3px 16px rgba(29,58,95,.045);border-color:var(--line)}
+.card{transition:border-color .18s,box-shadow .18s,transform .18s;background:var(--panel)}
+.card:hover{border-color:color-mix(in srgb,var(--accent) 32%,var(--line));box-shadow:0 5px 18px rgba(29,58,95,.085);transform:translateY(-1px)}
+.card::before{width:3px;border-radius:3px}
+.statnum{letter-spacing:-.055em;font-weight:790}
+button,.btn,input,select{transition:background .16s,border-color .16s,box-shadow .16s}
+button:hover:not(:disabled),.btn:hover{box-shadow:0 2px 8px rgba(23,58,102,.09)}
+button.primary,.btn.primary{background:linear-gradient(135deg,#276bd2,#174fae);border-color:#2863c2;box-shadow:0 2px 7px rgba(30,91,185,.15);font-weight:650}
+button.primary:hover,.btn.primary:hover{background:linear-gradient(135deg,#347be5,#205bbd)}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+#deliveryTab.active{background:#e8f1ff;border-color:#aac9f2;color:#1b57a9;box-shadow:inset 0 -2px #286bd1}
+#stockTab.active{background:#e2f6ed;border-color:#a2dec1;color:#087e5b;box-shadow:inset 0 -2px #169d74}
+body.dark #deliveryTab.active{background:#213c5c;color:#a9ceff;border-color:#4d759e}
+body.dark #stockTab.active{background:#1c423b;color:#a3ebd0;border-color:#438b76}
+#monitorPanel{border-top-width:2px}
+#monitorIcon{border:1px solid rgba(var(--category-rgb),.14)}
+#tableTitle{font-weight:750;letter-spacing:-.025em}
+#monitorBadge{font-weight:750;letter-spacing:.045em}
+.tablewrap{background:var(--panel);box-shadow:inset 0 1px rgba(255,255,255,.2)}
+.tablewrap thead th{background:var(--soft);font-weight:750;text-transform:none;letter-spacing:.018em}
+.tablewrap tbody tr{transition:background .12s}
+.tablewrap tbody tr:nth-child(even){background:color-mix(in srgb,var(--soft) 60%,var(--panel))}
+.tablewrap tbody tr:hover,.tablewrap tbody tr:nth-child(even):hover{background:var(--hover)}
+.tablewrap td b{font-weight:700;color:var(--text)}
+.status-trigger{font-weight:750;letter-spacing:.018em}
+.pagebar{border-top:1px solid var(--line);padding-top:7px}
+.dialog{box-shadow:0 24px 70px rgba(9,25,48,.25)}
+@media(prefers-reduced-motion:reduce){.card,button,.btn,.tablewrap tbody tr{transition:none}.card:hover{transform:none}}
+</style>
 </head><body>
 <header><div><h1>▣ Bacolod Warehouse Monitoring</h1><div class="sub">Delivery Receipts & Stocks Transfers</div></div><div><button id="theme">☾ Theme</button> <button id="backup">Export backup</button> <button id="privacyInfo" aria-label="Data and privacy information" title="Data & Privacy">ⓘ</button></div></header>
 <main><div class="stats"><div class="card"><div class="sub">Total Records</div><div class="statnum" id="total">0</div></div><div class="card"><div class="sub">Pending</div><div class="statnum" id="pending">0</div></div><div class="card"><div class="sub">Received</div><div class="statnum" id="received">0</div></div><div class="card"><div class="sub">Delayed</div><div class="statnum" id="delayed">0</div></div></div>
 <div class="toolbar"><button class="active" id="deliveryTab">Delivery Monitoring</button><button id="stockTab">Stocks Transfer</button><input id="search" placeholder="Search DR No., Ref No., origin, destination…"><span class="filter-wrap"><select id="filter" aria-label="Filter records by status"><option value="">All statuses</option><option>PENDING</option><option>RECEIVED</option><option>CANCELLED</option><option>REJECTED</option><option>DELAYED</option></select><button type="button" id="filterTrigger" class="filter-trigger" aria-haspopup="listbox" aria-expanded="false"><span class="filter-dot"></span><span class="filter-label">All statuses</span><span class="filter-arrow">⌄</span></button></span><button class="primary" id="add">+ Add record</button><button id="importBtn">Import Excel / Paste</button><button id="exportCsv">Export CSV</button><button id="historyBtn">Import History</button></div>
-<section class="panel" id="monitorPanel"><div class="batchbar"><button id="selectPage">Select page</button><button id="clearSelection">Clear selection</button><button id="moveSelected">Move selected</button><button id="deleteSelected">Delete selected</button><span class="hint" id="selectionCount">0 selected</span></div><div id="monitorHeading"><span id="monitorIcon" aria-hidden="true">🚚</span><div id="monitorHeadingText"><h2 id="tableTitle">Delivery Monitoring</h2><span id="monitorSubtitle">Delivery Receipts · DR</span></div><span id="monitorBadge">DR</span></div><div class="tablewrap"><table><thead id="head"></thead><tbody id="rows"></tbody></table></div><div class="pagebar"><p class="hint" id="count"></p><div class="pagecontrols"><label class="hint" for="pageSize">Rows</label><select id="pageSize"><option>25</option><option selected>50</option><option>100</option></select><button id="prevPage" aria-label="Previous page">‹</button><span class="hint" id="pageLabel">1 / 1</span><button id="nextPage" aria-label="Next page">›</button></div></div></section>
+<section class="panel" id="monitorPanel"><div class="batchbar"><button id="selectPage">Select page</button><button id="clearSelection">Clear selection</button><button id="moveSelected">Move selected</button><button id="deleteSelected">Delete selected</button><span class="hint" id="selectionCount">0 selected</span></div><div id="monitorHeading"><span id="monitorIcon" aria-hidden="true">🚚</span><div id="monitorHeadingText"><h2 id="tableTitle">Delivery Monitoring</h2><span id="monitorSubtitle">Delivery Receipts · DR</span></div><span id="monitorBadge">DR</span><div class="month-nav" aria-label="Transaction month filter"><button id="prevMonth" type="button" title="Previous month" aria-label="Previous month">‹</button><span class="month-label" id="monthLabel" aria-live="polite"></span><button id="nextMonth" type="button" title="Next month" aria-label="Next month">›</button><button id="allMonths" type="button" class="month-all" title="Show records from all months">All Months</button></div></div><div class="tablewrap"><table><thead id="head"></thead><tbody id="rows"></tbody></table></div><div class="pagebar"><p class="hint" id="count"></p><div class="pagecontrols"><label class="hint" for="pageSize">Rows</label><select id="pageSize"><option>25</option><option selected>50</option><option>100</option></select><button id="prevPage" aria-label="Previous page">‹</button><span class="hint" id="pageLabel">1 / 1</span><button id="nextPage" aria-label="Next page">›</button></div></div></section>
 </main>
 <div class="modal hidden" id="privacyModal"><div class="dialog"><h2>Data & Privacy</h2><p class="hint">This starter stores data in this browser only. Back up your records regularly. GitHub Pages does not synchronize records across devices; shared access requires a secured database connection. Do not upload confidential company records to a public repository.</p><footer><button data-close="privacyModal">Close</button></footer></div></div>
 <div class="modal hidden" id="editor"><div class="dialog"><h2 id="editTitle">Add record</h2><div class="fields" id="editFields"></div><footer><button data-close="editor">Cancel</button><button class="primary" id="save">Save record</button></footer></div></div>
@@ -171,16 +246,18 @@ main{padding:9px 14px!important;max-width:1800px!important}
 (()=>{
 'use strict';
 const KEY='bcd-monitor-v1', labels={delivery:['Trx Date','DR No.','From W/H','Ship To','Status','Received Date / Memo','Memo'],stock:['Trx Date','No','From','To','Status','Received Date / Memo','Remarks']};
-let data=load(),type='delivery',editing=null,selectedFile=null,page=1,selected=new Set(),pendingImport=null;const HISTORY_KEY='bcd-monitor-import-history-v1';let history=loadHistory();function loadHistory(){try{let h=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');return Array.isArray(h)?h:[]}catch{return []}}
+let selectedMonth=todayMonth(),data=load(),type='delivery',editing=null,selectedFile=null,page=1,selected=new Set(),pendingImport=null;const HISTORY_KEY='bcd-monitor-import-history-v1';let history=loadHistory();function loadHistory(){try{let h=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');return Array.isArray(h)?h:[]}catch{return []}}
 function load(){try{let a=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(a)?a:[]}catch{return []}}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(data));localStorage.setItem(HISTORY_KEY,JSON.stringify(history));return true}catch(e){alert('Could not save locally. Export a backup and free browser storage. '+e.message);return false}}
 const $=id=>document.getElementById(id),safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function todayMonth(){return today().slice(0,7)}
+function monthShift(delta){const [y,m]=selectedMonth.split('-').map(Number);const d=new Date(Date.UTC(y,m-1+delta,1));selectedMonth=d.toISOString().slice(0,7);page=1;selected.clear();render()}
 function today(){let p=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Manila',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());let v=Object.fromEntries(p.map(x=>[x.type,x.value]));return `${v.year}-${v.month}-${v.day}`}
 function displayDate(v){let m=String(v||'').match(/^(\d{4})-(\d{2})-(\d{2})$/);return m?`${m[2]}/${m[3]}/${m[1]}`:String(v||'')}function statusMemo(r){switch(r.status){case 'PENDING':return 'Within lead time';case 'RECEIVED':return displayDate(r.received)||'—';case 'CANCELLED':return 'Cancelled by warehouse';case 'REJECTED':return 'Rejected by warehouse';case 'DELAYED':return 'Beyond ETA';default:return ''}}
 function normStatus(s){s=String(s||'').trim().toUpperCase();return ['PENDING','RECEIVED','CANCELLED','REJECTED','DELAYED'].includes(s)?s:'PENDING'}
 function changeStatus(r,status){let old=r.status;r.status=normStatus(status);if(r.status==='RECEIVED'&&old!=='RECEIVED')r.received=today();if(r.status!=='RECEIVED')r.received='';persist();render()}
-function render(){closeStatusMenu();let a=data.filter(r=>r.type===type),q=$('search').value.trim().toLowerCase(),f=$('filter').value;let visible=a.filter(r=>(!f||r.status===f)&&(!q||[r.date,r.no,r.from,r.to,r.memo,r.received].join(' ').toLowerCase().includes(q)));let size=Number($('pageSize').value),pages=Math.max(1,Math.ceil(visible.length/size));page=Math.max(1,Math.min(page,pages));let shown=visible.slice((page-1)*size,page*size);$('pageLabel').textContent=`${page} / ${pages}`;$('prevPage').disabled=page===1;$('nextPage').disabled=page===pages;
-$('tableTitle').textContent=type==='delivery'?'Delivery Monitoring':'Stocks Transfer Monitoring';
+function render(){closeStatusMenu();let a=data.filter(r=>r.type===type),q=$('search').value.trim().toLowerCase(),f=$('filter').value;let visible=a.filter(r=>(selectedMonth===null||String(r.date||'').slice(0,7)===selectedMonth)&&(!f||r.status===f)&&(!q||[r.date,r.no,r.from,r.to,r.memo,r.received].join(' ').toLowerCase().includes(q)));let size=Number($('pageSize').value),pages=Math.max(1,Math.ceil(visible.length/size));page=Math.max(1,Math.min(page,pages));let shown=visible.slice((page-1)*size,page*size);$('pageLabel').textContent=`${page} / ${pages}`;$('prevPage').disabled=page===1;$('nextPage').disabled=page===pages;
+$('monthLabel').textContent=selectedMonth?new Intl.DateTimeFormat('en-US',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(selectedMonth+'-01T00:00:00Z')):'All Months';$('allMonths').classList.toggle('active-month',selectedMonth===null);$('tableTitle').textContent=type==='delivery'?'Delivery Monitoring':'Stocks Transfer Monitoring';
  document.body.classList.toggle('category-stock',type==='stock');$('monitorIcon').textContent=type==='delivery'?'🚚':'⇄';$('monitorSubtitle').textContent=type==='delivery'?'Delivery Receipts · DR':'Stock Transfers · ST';$('monitorBadge').textContent=type==='delivery'?'DR':'ST';
 $('head').innerHTML='<tr><th class="checkcell">✓</th>'+labels[type].map(s=>'<th>'+safe(s)+'</th>').join('')+'<th>Actions</th></tr>';
 $('rows').innerHTML=shown.map(r=>`<tr><td><input type="checkbox" data-action="select" data-id="${safe(r.id)}" ${selected.has(r.id)?'checked':''} aria-label="Select record"></td><td>${safe(displayDate(r.date))}</td><td><b>${safe(r.no)}</b></td><td>${safe(r.from)}</td><td>${safe(r.to)}</td><td><button type="button" class="status-trigger ${r.status}" data-id="${safe(r.id)}" data-action="status-menu" aria-label="Change status: ${r.status}" aria-haspopup="true" aria-expanded="false"><span class="status-dot"></span><span>${safe(r.status)}</span><span class="status-chevron">⌄</span></button></td><td>${safe(statusMemo(r))}</td><td class="note">${safe(r.memo)}</td><td><div class="actions"><button data-action="edit" data-id="${safe(r.id)}">Edit</button><button data-action="move" data-id="${safe(r.id)}">Move</button><button data-action="delete" data-id="${safe(r.id)}">Delete</button></div></td></tr>`).join('')||'<tr><td colspan="9">No records found. Import an Excel file or add a record.</td></tr>';
@@ -199,6 +276,7 @@ function parsePaste(s,target=type){let rows=s.trim().split(/\r?\n/).map(l=>l.spl
 async function importFile(file,target=type){if(!window.XLSX)throw Error('Excel reader failed to load. Connect to the internet and retry.');let buf=await file.arrayBuffer(),book=XLSX.read(buf,{type:'array',cellDates:true});for(let name of book.SheetNames){let rows=XLSX.utils.sheet_to_json(book.Sheets[name],{header:1,defval:'',raw:true});try{return {records:parseRows(rows,target),rows}}catch{}}throw Error('No worksheet contained the expected report headers.')}
 function download(name,content,mime){let url=URL.createObjectURL(new Blob([content],{type:mime})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 function csv(rows){return rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n')}
+$('prevMonth').onclick=()=>{if(selectedMonth===null)selectedMonth=todayMonth();monthShift(-1)};$('nextMonth').onclick=()=>{if(selectedMonth===null)selectedMonth=todayMonth();monthShift(1)};$('allMonths').onclick=()=>{selectedMonth=null;page=1;selected.clear();render()};
 $('deliveryTab').onclick=()=>{type='delivery';page=1;render()};$('stockTab').onclick=()=>{type='stock';page=1;render()};$('search').oninput=()=>{page=1;render()};$('filter').onchange=()=>{page=1;syncFilterTrigger();render()};$('pageSize').onchange=()=>{page=1;render()};$('prevPage').onclick=()=>{page--;render()};$('nextPage').onclick=()=>{page++;render()};$('add').onclick=()=>openEditor(null);$('save').onclick=saveEditor;
 let activeStatusMenu=null;
 function closeStatusMenu(){if(activeStatusMenu){activeStatusMenu.remove();activeStatusMenu=null}document.querySelectorAll('.status-trigger[aria-expanded="true"]').forEach(b=>b.setAttribute('aria-expanded','false'))}
