@@ -351,7 +351,19 @@ body.dark.category-stock{--monitor-surface:#19332f;--monitor-header:#244740;--mo
 body.dark #monitorPanel .tablewrap tbody td{color:var(--text)}
 @media (prefers-reduced-motion:reduce){#monitorPanel .tablewrap tbody tr{transition:none!important}}
 </style>
-</head><body>
+<style id="light-panel-enhancement-2026">
+/* Stronger category identity in light mode only; dark theme is untouched. */
+body:not(.dark){--monitor-surface:#eaf3ff;--monitor-header:#d5e7ff;--monitor-row:#f9fcff;--monitor-alt:#edf5ff;--monitor-hover:#dcecff;--monitor-border:#a9c9ef;--monitor-ref:#174fa8;--monitor-heading:#1855aa}
+body.category-stock:not(.dark){--monitor-surface:#e5f7f1;--monitor-header:#cceee2;--monitor-row:#f8fdfa;--monitor-alt:#eaf8f1;--monitor-hover:#d5f1e4;--monitor-border:#9bd8bf;--monitor-ref:#087453;--monitor-heading:#086f54}
+body:not(.dark) #monitorPanel{box-shadow:0 4px 18px rgba(37,99,235,.07)}
+body.category-stock:not(.dark) #monitorPanel{box-shadow:0 4px 18px rgba(13,148,136,.07)}
+body:not(.dark) #monitorPanel .tablewrap tbody td{border-bottom-color:var(--monitor-border)}
+body:not(.dark) #monitorPanel .month-nav .month-selector{background:var(--monitor-row)!important;border-color:var(--monitor-border)!important}
+body:not(.dark) #monitorPanel .month-nav #allMonths.active-month{background:var(--monitor-header)!important;border-color:var(--monitor-border)!important;color:var(--monitor-heading)!important}
+body:not(.dark) #monitorPanel .batchbar button{background:var(--monitor-row);border-color:var(--monitor-border)}
+body:not(.dark) #monitorPanel .batchbar button:hover{background:var(--monitor-header)}
+body:not(.dark) #monitorPanel .tablewrap tbody tr:hover{box-shadow:inset 3px 0 var(--category)}
+</style></head><body>
 <header><div class="warehouse-brand"><img class="warehouse-brand-logo" src="./logo.png" alt="Logistics Tracker logo"><div class="warehouse-brand-text"><h1>Bacolod Warehouse Monitoring</h1><div class="sub">Delivery Receipts & Stocks Transfers</div></div></div><div><button id="cloudConnect" type="button">☁ Connect Google</button> <button id="cloudSync" type="button" disabled title="Get latest records from Google Sheets">↻ Refresh from Cloud</button> <button id="cloudRetry" type="button" disabled hidden title="Retry uploading unsaved changes">↥ Retry Save</button> <span id="cloudState" class="hint" role="status">Local only</span> <button id="theme">☾ Theme</button> <button id="backup">Export backup</button> <button id="privacyInfo" aria-label="Data and privacy information" title="Data & Privacy">ⓘ</button></div></header>
 <main><div class="stats"><div class="card"><div class="sub">Total Records</div><div class="statnum" id="total">0</div></div><div class="card"><div class="sub">Pending</div><div class="statnum" id="pending">0</div></div><div class="card"><div class="sub">Received</div><div class="statnum" id="received">0</div></div><div class="card"><div class="sub">Delayed</div><div class="statnum" id="delayed">0</div></div></div>
 <div class="toolbar"><button class="active" id="deliveryTab">Delivery Monitoring</button><button id="stockTab">Stocks Transfer</button><input id="search" placeholder="Search DR No., Ref No., origin, destination…"><span class="filter-wrap"><select id="filter" aria-label="Filter records by status"><option value="">All statuses</option><option>PENDING</option><option>RECEIVED</option><option>CANCELLED</option><option>REJECTED</option><option>DELAYED</option></select><button type="button" id="filterTrigger" class="filter-trigger" aria-haspopup="listbox" aria-expanded="false"><span class="filter-dot"></span><span class="filter-label">All statuses</span><span class="filter-arrow">⌄</span></button></span><button class="primary" id="add">+ Add record</button><button id="importBtn">Import Excel / Paste</button><button id="exportCsv">Export CSV</button><button id="historyBtn">Import History</button></div>
