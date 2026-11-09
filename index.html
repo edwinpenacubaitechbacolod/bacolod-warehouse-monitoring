@@ -391,7 +391,7 @@ body:not(.dark) #monitorPanel .tablewrap tbody tr:hover{box-shadow:inset 3px 0 v
  #monitorHeading .month-nav{order:3!important;width:100%!important;justify-content:flex-start!important;margin:0!important}
 }
 </style></head><body>
-<header><div class="warehouse-brand"><img alt="Logistics Tracker logo" class="warehouse-brand-logo" src="./logo.png"/><div class="warehouse-brand-text"><h1>Bacolod Warehouse Monitoring</h1><div class="sub">Delivery Receipts &amp; Stocks Transfers</div></div></div><div><span class="sync-group" role="group" aria-label="Google Sheets sync"><button id="cloudConnect" type="button">☁ Connect Google</button> <button disabled="" id="cloudSync" title="Get latest records from Google Sheets" type="button">↻ Refresh from Cloud</button> <button disabled="" hidden="" id="cloudRetry" title="Retry uploading unsaved changes" type="button">↥ Retry Save</button> <span class="hint" id="cloudState" role="status">Local only</span></span> <a class="tracker-link" href="https://edwinpenacubaitechbacolod.github.io/warehouse-waybill-tracker/" target="_blank" rel="noopener">Waybill Tracker →</a> <button id="theme">☾ Theme</button> <button id="backup">Export backup</button> <button aria-label="Data and privacy information" id="privacyInfo" title="Data &amp; Privacy">ⓘ</button></div></header>
+<header><div class="warehouse-brand"><img alt="Logistics Tracker logo" class="warehouse-brand-logo" src="./logo.png"/><div class="warehouse-brand-text"><h1>Bacolod Warehouse Monitoring</h1><div class="sub">Delivery Receipts &amp; Stocks Transfers</div></div></div><div><span class="sync-group" role="group" aria-label="Google Sheets sync"><button id="cloudConnect" type="button">☁ Connect Google</button> <button disabled="" id="cloudSync" title="Get latest records from Google Sheets" type="button">↻ Refresh from Cloud</button> <button disabled="" hidden="" id="cloudRetry" title="Retry uploading unsaved changes" type="button">↥ Retry Save</button> <span class="hint" id="cloudState" role="status">Local only</span></span> <a class="tracker-link" href="https://edwinpenacubaitechbacolod.github.io/warehouse-waybill-tracker/" target="_blank" rel="noopener">Waybill Tracker <span class="tl-arrow">→</span></a> <button id="theme">☾ Theme</button> <button id="backup">Export backup</button> <button aria-label="Data and privacy information" id="privacyInfo" title="Data &amp; Privacy">ⓘ</button></div></header>
 <main><div class="stats"><div class="card"><div class="sub">Total Records</div><div class="statnum" id="total">0</div></div><div class="card"><div class="sub">Pending</div><div class="statnum" id="pending">0</div></div><div class="card"><div class="sub">Received</div><div class="statnum" id="received">0</div></div><div class="card"><div class="sub">Delayed</div><div class="statnum" id="delayed">0</div></div></div>
 <div class="toolbar"><button class="active" id="deliveryTab">Delivery Monitoring</button><button id="stockTab">Stocks Transfer</button><input id="search" placeholder="Search DR No., Ref No., origin, destination…"/><span class="filter-wrap"><select aria-label="Filter records by status" id="filter"><option value="">All statuses</option><option>PENDING</option><option>RECEIVED</option><option>CANCELLED</option><option>REJECTED</option><option>DELAYED</option></select><button aria-expanded="false" aria-haspopup="listbox" class="filter-trigger" id="filterTrigger" type="button"><span class="filter-dot"></span><span class="filter-label">All statuses</span><span class="filter-arrow">⌄</span></button></span><button class="primary" id="add">+ Add record</button><button id="importBtn">Import Excel / Paste</button><button id="exportCsv">Export CSV</button><button id="historyBtn">Import History</button></div>
 <section class="panel" id="monitorPanel"><div id="monitorHeading"><span aria-hidden="true" id="monitorIcon">🚚</span><div id="monitorHeadingText"><h2 id="tableTitle">Delivery Monitoring</h2><span id="monitorSubtitle">Delivery Receipts · DR</span></div><span id="monitorBadge">DR</span><div class="batchbar"><button id="selectPage">Select page</button><button id="clearSelection">Clear selection</button><button id="moveSelected">Move selected</button><button id="deleteSelected">Delete selected</button><span class="hint" id="selectionCount">0 selected</span></div><div aria-label="Transaction month filter" class="month-nav"><span class="month-selector"><button aria-label="Previous month" id="prevMonth" title="Previous month" type="button">‹</button><span class="month-label"><span aria-live="polite" id="monthLabel"></span></span><button aria-label="Next month" id="nextMonth" title="Next month" type="button">›</button></span><button class="month-all" id="allMonths" title="Show records from all months" type="button">All Months</button></div></div><div class="tablewrap"><table><thead id="head"></thead><tbody id="rows"></tbody></table></div><div class="pagebar"><p class="hint" id="count"></p><div class="pagecontrols"><label class="hint" for="pageSize">Rows</label><select id="pageSize"><option>25</option><option selected="">50</option><option>100</option></select><button aria-label="Previous page" id="prevPage">‹</button><span class="hint" id="pageLabel">1 / 1</span><button aria-label="Next page" id="nextPage">›</button></div></div></section>
@@ -769,5 +769,51 @@ body.dark #backupAge.backup-old{color:#fcd34d}
 .stats .card[data-stat]:hover,.stats .card[data-stat]:focus-visible,.stats .card[data-stat].stat-active{background:color-mix(in srgb,var(--tile) 32%,var(--panel))!important;border-color:var(--tile)!important}
 body:not(.dark) .stats .card{background:color-mix(in srgb,var(--tile) 16%,#fff)!important}
 body:not(.dark) .stats .card[data-stat]:hover,body:not(.dark) .stats .card[data-stat]:focus-visible,body:not(.dark) .stats .card[data-stat].stat-active{background:color-mix(in srgb,var(--tile) 26%,#fff)!important}
+</style>
+<div class="glass-badge" role="note" aria-label="Created by Edwin"><span class="gb-label">CREATED BY</span><span class="gb-name">EDWIN</span></div>
+<style id="glass-badge-2026">
+.glass-badge{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:max(12px,env(safe-area-inset-bottom,0px));z-index:5;display:inline-flex;align-items:center;justify-content:center;gap:7px;height:26px;padding:0 13px;box-sizing:border-box;border-radius:999px;line-height:1;white-space:nowrap;pointer-events:none;user-select:none;overflow:hidden;
+ color:#12263a;background:linear-gradient(135deg,rgba(255,255,255,.62),rgba(235,243,251,.46));
+ -webkit-backdrop-filter:blur(22px) saturate(180%);backdrop-filter:blur(22px) saturate(180%);
+ border:1px solid rgba(255,255,255,.6);
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 3px 12px rgba(20,40,70,.12)}
+.glass-badge::after{content:"";position:absolute;top:0;left:-30%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.3),transparent);transform:skewX(-18deg)}
+.gb-dot{position:relative;z-index:1;flex:none;width:7px;height:7px;border-radius:50%;background:#1fbf80;box-shadow:0 0 0 2px rgba(31,191,128,.22),0 0 7px rgba(31,191,128,.75)}
+.gb-label{position:relative;z-index:1;font-size:.56rem;font-weight:800;letter-spacing:.12em;color:#2c4258;text-shadow:0 0 6px rgba(255,255,255,.7)}
+.gb-name{position:relative;z-index:1;font-size:.78rem;font-weight:800;letter-spacing:.06em;color:#8f5a05;text-shadow:0 0 6px rgba(255,255,255,.7)}
+body.dark .glass-badge{color:#f2f7fc;background:linear-gradient(135deg,rgba(38,56,76,.68),rgba(22,36,52,.52));border-color:rgba(255,255,255,.3);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 3px 12px rgba(0,0,0,.3)}
+body.dark .gb-label{color:#d3e0ec;text-shadow:0 1px 5px rgba(0,0,0,.5)}
+body.dark .gb-name{color:#ffd978;text-shadow:0 1px 6px rgba(0,0,0,.55)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.glass-badge{background:rgba(255,255,255,.93)}body.dark .glass-badge{background:rgba(24,38,54,.93)}}
+@media(prefers-reduced-transparency:reduce){.glass-badge{background:rgba(255,255,255,.96)}body.dark .glass-badge{background:rgba(24,38,54,.96)}}
+@media(forced-colors:active){.glass-badge{border:1px solid CanvasText;background:Canvas;color:CanvasText}.gb-name,.gb-label{color:CanvasText}}
+main{padding-bottom:52px}
+@media(max-width:600px){.glass-badge{right:max(8px,env(safe-area-inset-right,0px));bottom:max(8px,env(safe-area-inset-bottom,0px));height:22px;padding:0 10px;gap:6px}.gb-label{font-size:.5rem}.gb-name{font-size:.7rem}}
+@media print{.glass-badge{display:none}}
+</style>
+<style id="glass-badge-scroll-2026">
+.glass-badge{opacity:.9;transition:opacity .25s ease}
+.glass-badge.is-scrolling{opacity:.14}
+@media(prefers-reduced-motion:reduce){.glass-badge{transition:none}}
+</style>
+<script>
+(function(){
+  var b=document.querySelector('.glass-badge'),t;if(!b)return;
+  function go(){b.classList.add('is-scrolling');clearTimeout(t);t=setTimeout(function(){b.classList.remove('is-scrolling')},900)}
+  document.addEventListener('scroll',go,{capture:true,passive:true});
+  window.addEventListener('wheel',go,{passive:true});
+  window.addEventListener('touchmove',go,{passive:true});
+})();
+</script>
+<style id="tracker-link-anim-2026">
+.tracker-link{position:relative;overflow:hidden;transition:border-color .2s,box-shadow .2s,transform .2s}
+.tracker-link::after{content:"";position:absolute;top:-10%;left:-70%;width:55%;height:120%;background:linear-gradient(100deg,transparent 0%,rgba(22,99,213,.10) 30%,rgba(22,99,213,.38) 50%,rgba(22,99,213,.10) 70%,transparent 100%);transform:skewX(-20deg);animation:tl-shine 3.6s ease-in-out 1s infinite;pointer-events:none}
+body.dark .tracker-link::after{background:linear-gradient(100deg,transparent 0%,rgba(255,255,255,.12) 30%,rgba(255,255,255,.5) 50%,rgba(255,255,255,.12) 70%,transparent 100%)}
+.tl-arrow{display:inline-block;transition:transform .2s ease}
+.tracker-link:hover,.tracker-link:focus-visible{transform:translateY(-1px);box-shadow:0 4px 12px rgba(22,99,213,.22)}
+.tracker-link:hover .tl-arrow,.tracker-link:focus-visible .tl-arrow{transform:translateX(3px)}
+.tracker-link:hover::after{animation-duration:1s;animation-delay:0s}
+@keyframes tl-shine{0%{left:-70%}45%,100%{left:130%}}
+@media(prefers-reduced-motion:reduce){.tracker-link::after{animation:none;display:none}.tracker-link,.tl-arrow{transition:none}.tracker-link:hover{transform:none}}
 </style>
 </body></html>
