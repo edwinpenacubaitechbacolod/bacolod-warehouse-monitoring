@@ -391,7 +391,7 @@ body:not(.dark) #monitorPanel .tablewrap tbody tr:hover{box-shadow:inset 3px 0 v
  #monitorHeading .month-nav{order:3!important;width:100%!important;justify-content:flex-start!important;margin:0!important}
 }
 </style></head><body>
-<header><div class="warehouse-brand"><img alt="Logistics Tracker logo" class="warehouse-brand-logo" src="./logo.png"/><div class="warehouse-brand-text"><h1>Bacolod Warehouse Monitoring</h1><div class="sub">Delivery Receipts &amp; Stocks Transfers</div></div></div><div><button id="cloudConnect" type="button">☁ Connect Google</button> <button disabled="" id="cloudSync" title="Get latest records from Google Sheets" type="button">↻ Refresh from Cloud</button> <button disabled="" hidden="" id="cloudRetry" title="Retry uploading unsaved changes" type="button">↥ Retry Save</button> <span class="hint" id="cloudState" role="status">Local only</span> <button id="theme">☾ Theme</button> <button id="backup">Export backup</button> <button aria-label="Data and privacy information" id="privacyInfo" title="Data &amp; Privacy">ⓘ</button></div></header>
+<header><div class="warehouse-brand"><img alt="Logistics Tracker logo" class="warehouse-brand-logo" src="./logo.png"/><div class="warehouse-brand-text"><h1>Bacolod Warehouse Monitoring</h1><div class="sub">Delivery Receipts &amp; Stocks Transfers</div></div></div><div><span class="sync-group" role="group" aria-label="Google Sheets sync"><button id="cloudConnect" type="button">☁ Connect Google</button> <button disabled="" id="cloudSync" title="Get latest records from Google Sheets" type="button">↻ Refresh from Cloud</button> <button disabled="" hidden="" id="cloudRetry" title="Retry uploading unsaved changes" type="button">↥ Retry Save</button> <span class="hint" id="cloudState" role="status">Local only</span></span> <a class="tracker-link" href="https://edwinpenacubaitechbacolod.github.io/warehouse-waybill-tracker/" target="_blank" rel="noopener">Waybill Tracker →</a> <button id="theme">☾ Theme</button> <button id="backup">Export backup</button> <button aria-label="Data and privacy information" id="privacyInfo" title="Data &amp; Privacy">ⓘ</button></div></header>
 <main><div class="stats"><div class="card"><div class="sub">Total Records</div><div class="statnum" id="total">0</div></div><div class="card"><div class="sub">Pending</div><div class="statnum" id="pending">0</div></div><div class="card"><div class="sub">Received</div><div class="statnum" id="received">0</div></div><div class="card"><div class="sub">Delayed</div><div class="statnum" id="delayed">0</div></div></div>
 <div class="toolbar"><button class="active" id="deliveryTab">Delivery Monitoring</button><button id="stockTab">Stocks Transfer</button><input id="search" placeholder="Search DR No., Ref No., origin, destination…"/><span class="filter-wrap"><select aria-label="Filter records by status" id="filter"><option value="">All statuses</option><option>PENDING</option><option>RECEIVED</option><option>CANCELLED</option><option>REJECTED</option><option>DELAYED</option></select><button aria-expanded="false" aria-haspopup="listbox" class="filter-trigger" id="filterTrigger" type="button"><span class="filter-dot"></span><span class="filter-label">All statuses</span><span class="filter-arrow">⌄</span></button></span><button class="primary" id="add">+ Add record</button><button id="importBtn">Import Excel / Paste</button><button id="exportCsv">Export CSV</button><button id="historyBtn">Import History</button></div>
 <section class="panel" id="monitorPanel"><div id="monitorHeading"><span aria-hidden="true" id="monitorIcon">🚚</span><div id="monitorHeadingText"><h2 id="tableTitle">Delivery Monitoring</h2><span id="monitorSubtitle">Delivery Receipts · DR</span></div><span id="monitorBadge">DR</span><div class="batchbar"><button id="selectPage">Select page</button><button id="clearSelection">Clear selection</button><button id="moveSelected">Move selected</button><button id="deleteSelected">Delete selected</button><span class="hint" id="selectionCount">0 selected</span></div><div aria-label="Transaction month filter" class="month-nav"><span class="month-selector"><button aria-label="Previous month" id="prevMonth" title="Previous month" type="button">‹</button><span class="month-label"><span aria-live="polite" id="monthLabel"></span></span><button aria-label="Next month" id="nextMonth" title="Next month" type="button">›</button></span><button class="month-all" id="allMonths" title="Show records from all months" type="button">All Months</button></div></div><div class="tablewrap"><table><thead id="head"></thead><tbody id="rows"></tbody></table></div><div class="pagebar"><p class="hint" id="count"></p><div class="pagecontrols"><label class="hint" for="pageSize">Rows</label><select id="pageSize"><option>25</option><option selected="">50</option><option>100</option></select><button aria-label="Previous page" id="prevPage">‹</button><span class="hint" id="pageLabel">1 / 1</span><button aria-label="Next page" id="nextPage">›</button></div></div></section>
@@ -475,7 +475,7 @@ $('importBtn').onclick=()=>{resetPreview();$('importModal').classList.remove('hi
 $('file').onchange=e=>{selectedFile=e.target.files[0]||null;$('filename').textContent=selectedFile?.name||'No file selected';resetPreview()};
 $('paste').oninput=resetPreview;
 function detectCategory(rows){let clean=rows.filter(r=>Array.isArray(r)),hdr=clean.find(r=>headerIndex(r,['trxdate','transactiondate'])>=0&&headerIndex(r,['no','drno'])>=0)||[];let h=hdr.map(normalizeHeader),dr=h.includes('shipto')||h.includes('fromwh')||h.includes('drno'),st=h.includes('from')&&h.includes('to');return dr&&!st?'delivery':st&&!dr?'stock':null}
-$('doImport').onclick=async()=>{try{let parsed=$('paste').value.trim()?parsePaste($('paste').value):selectedFile?await importFile(selectedFile):null;if(!parsed)throw Error('Choose an Excel file or paste rows.');let records=parsed.records;if(!records.length)throw Error('No valid transaction rows found.');let guess=detectCategory(parsed.rows);pendingImport={records,guess,filename:selectedFile&&!$('paste').value.trim()?selectedFile.name:'Pasted spreadsheet'};$('importDestination').value=guess||type;const mismatch=guess&&guess!==type;$('importWarning').innerHTML=mismatch?`<div class="warning">⚠ This file looks like <b>${guess==='delivery'?'Delivery Monitoring':'Stocks Transfer'}</b>, but you opened the import from ${type==='delivery'?'Delivery Monitoring':'Stocks Transfer'}. The destination was switched automatically. Please verify.</div>`:!guess?'<div class="warning">⚠ Category could not be identified confidently. Please verify the destination before importing.</div>':'';$('previewSummary').textContent=`${records.length} valid rows found. Showing first 10. Check destination and details before confirming.`;$('previewRows').innerHTML=records.slice(0,10).map(r=>`<tr><td>${safe(r.date)}</td><td>${safe(r.no)}</td><td>${safe(r.from)}</td><td>${safe(r.to)}</td><td>${safe(r.memo)}</td></tr>`).join('');$('importPreview').classList.remove('hidden');$('confirmImport').classList.remove('hidden');$('doImport').classList.add('hidden');$('importResult').classList.add('hidden')}catch(e){$('importResult').classList.remove('hidden');$('importResult').textContent='Preview error: '+e.message}};
+$('doImport').onclick=async()=>{try{let parsed=$('paste').value.trim()?parsePaste($('paste').value):selectedFile?await importFile(selectedFile):null;if(!parsed)throw Error('Choose an Excel file or paste rows.');let records=parsed.records;if(!records.length)throw Error('No valid transaction rows found.');let guess=detectCategory(parsed.rows);pendingImport={records,guess,filename:selectedFile&&!$('paste').value.trim()?selectedFile.name:'Pasted spreadsheet'};$('importDestination').value=guess||type;const mismatch=guess&&guess!==type;$('importWarning').innerHTML=mismatch?`<div class="warning">⚠ This file looks like <b>${guess==='delivery'?'Delivery Monitoring':'Stocks Transfer'}</b>, but you opened the import from ${type==='delivery'?'Delivery Monitoring':'Stocks Transfer'}. The destination was switched automatically. Please verify.</div>`:!guess?'<div class="warning">⚠ Category could not be identified confidently. Please verify the destination before importing.</div>':'';const destType=guess||type,normNo=v=>String(v||'').trim().toLowerCase(),existingNos=new Set(data.filter(x=>x.type===destType).map(x=>normNo(x.no))),seenNos=new Set(),dupInfo=records.map(r=>{const k=normNo(r.no);let d=k&&existingNos.has(k)?'Already saved':k&&seenNos.has(k)?'Repeated in file':'';if(k)seenNos.add(k);return d}),dupCount=dupInfo.filter(Boolean).length,order=records.map((r,i)=>i).sort((a,b)=>(dupInfo[b]?1:0)-(dupInfo[a]?1:0)||a-b).slice(0,10);$('previewSummary').textContent=`${records.length} valid rows found. Showing first 10${dupCount?' (duplicates listed first)':''}. Check destination and details before confirming.`+(dupCount?` ${dupCount} possible duplicate number${dupCount>1?'s':''} found.`:'');if(dupCount)$('importWarning').innerHTML+=`<div class="warning">⚠ ${dupCount} row${dupCount>1?'s have':' has'} a DR / reference number that is already saved or repeated in this file. Duplicates are highlighted below and will be skipped automatically when you confirm the import.</div>`;$('previewRows').innerHTML=order.map(i=>{const r=records[i],d=dupInfo[i];return `<tr${d?' class="dup-row"':''}><td>${safe(r.date)}</td><td>${safe(r.no)}${d?` <span class="dup-tag">${d}</span>`:''}</td><td>${safe(r.from)}</td><td>${safe(r.to)}</td><td>${safe(r.memo)}</td></tr>`}).join('');$('importPreview').classList.remove('hidden');$('confirmImport').classList.remove('hidden');$('doImport').classList.add('hidden');$('importResult').classList.add('hidden')}catch(e){$('importResult').classList.remove('hidden');$('importResult').textContent='Preview error: '+e.message}};
 $('confirmImport').onclick=()=>{if(!pendingImport)return;let dest=$('importDestination').value,seen=new Set(data.filter(r=>r.type===dest).map(r=>r.no.toLowerCase())),added=[],skipped=0;for(let r of pendingImport.records){let key=r.no.toLowerCase();if(seen.has(key)){skipped++;continue}seen.add(key);added.push({...r,type:dest,id:crypto.randomUUID()})}if(!added.length){$('importResult').classList.remove('hidden');$('importResult').textContent=`No records added. ${skipped} duplicates skipped.`;return}if(!confirm(`Import ${added.length} records into ${dest==='delivery'?'Delivery Monitoring':'Stocks Transfer'}? (${skipped} duplicates skipped)`))return;let batchId=crypto.randomUUID(),batch={id:batchId,filename:pendingImport.filename,created:new Date().toISOString(),destination:dest,ids:added.map(r=>r.id),count:added.length};added.forEach(r=>r.batchId=batchId);data.push(...added);history.unshift(batch);if(!persist()){data=data.filter(r=>r.batchId!==batchId);history.shift();return}type=dest;page=1;selected.clear();render();$('importResult').classList.remove('hidden');$('importResult').textContent=`Import complete: ${added.length} added, ${skipped} duplicates skipped. Batch saved in Import History.`;resetPreview();$('file').value='';$('paste').value='';selectedFile=null;$('filename').textContent='No file selected'};
 function renderHistory(){$('historyList').innerHTML=history.length?history.map(b=>{let live=data.filter(r=>r.batchId===b.id),dr=live.filter(r=>r.type==='delivery').length,st=live.length-dr;return `<div class="historyitem"><div><b>${safe(b.filename)}</b><div><small>${safe(new Date(b.created).toLocaleString())} · ${live.length}/${b.count} remaining · ${dr} DR / ${st} Stock</small></div></div><div class="batchactions"><button data-history="move" data-batch="${safe(b.id)}">Move batch</button><button data-history="undo" data-batch="${safe(b.id)}">Undo import</button></div></div>`}).join(''):'<p class="hint">No tracked imports yet. Earlier records are preserved, but cannot be undone as a batch.</p>'}
 $('historyBtn').onclick=()=>{renderHistory();$('historyModal').classList.remove('hidden')};
@@ -688,4 +688,86 @@ render();
 if(recoveredPending)cloudStatus('Local changes need reconciliation — export backup');
 updateCloudControls();
 })();
-</script></body></html>
+</script><style id="stat-filter-backup-2026">
+.stats .card[data-stat]{cursor:pointer;transition:border-color .16s,box-shadow .16s}
+.stats .card[data-stat]:hover,.stats .card[data-stat]:focus-visible{border-color:var(--accent);box-shadow:0 3px 12px rgba(22,99,213,.14);outline:none}
+.stats .card[data-stat]:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+.stats .card[data-stat].stat-active{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+#backupAge{font-size:.7rem;color:var(--muted);white-space:nowrap}
+@media(max-width:700px){#backupAge{display:none}}
+</style>
+<script>
+(function(){
+  var map=['','PENDING','RECEIVED','DELAYED'];
+  var cards=document.querySelectorAll('.stats .card');
+  var sel=document.getElementById('filter');
+  function sync(){cards.forEach(function(c,i){c.classList.toggle('stat-active',!!map[i]&&sel.value===map[i]||(!map[i]&&!sel.value&&false))})}
+  cards.forEach(function(c,i){
+    c.setAttribute('data-stat',map[i]||'ALL');c.setAttribute('role','button');c.tabIndex=0;
+    c.setAttribute('aria-label','Filter by '+(map[i]||'all records'));
+    var go=function(){sel.value=(sel.value===map[i]?'':map[i]);sel.dispatchEvent(new Event('change',{bubbles:true}));sync()};
+    c.addEventListener('click',go);
+    c.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}});
+  });
+  sel.addEventListener('change',sync);sync();
+  var KEY='bcd-last-backup-shown',b=document.getElementById('backup'),span=document.createElement('span');
+  span.id='backupAge';b.insertAdjacentElement('afterend',span);
+  function show(){var t;try{t=localStorage.getItem(KEY)}catch(e){}
+    if(!t){span.textContent='No backup yet';span.classList.add('backup-old');return}
+    var d=Math.floor((Date.now()-new Date(t))/864e5);
+    span.textContent='Last backup: '+(d<1?'today':d===1?'yesterday':d+' days ago');span.classList.toggle('backup-old',d>7);b.title='Last backup: '+new Date(t).toLocaleString()}
+  b.addEventListener('click',function(){try{localStorage.setItem(KEY,new Date().toISOString())}catch(e){}show()});
+  show();
+})();
+</script>
+<style id="sync-group-dup-2026">
+.sync-group{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;padding:3px 8px 3px 4px;margin-right:6px;border:1px solid var(--line);border-radius:11px;background:color-mix(in srgb,var(--accent) 5%,var(--panel))}
+.sync-group .hint{padding:0 4px;white-space:nowrap}
+.dup-row td{background:rgba(232,120,120,.14)!important}
+.dup-tag{display:inline-block;margin-left:6px;padding:2px 7px;border-radius:99px;font-size:.66rem;font-weight:700;color:#a33a3a;background:rgba(232,120,120,.2);border:1px solid rgba(232,120,120,.5);white-space:nowrap}
+body.dark .dup-tag{color:#ffb3b3}
+</style>
+<style id="header-refine-2026">
+#cloudState{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;font-size:.72rem;font-weight:700;border:1px solid var(--line);background:var(--panel);color:var(--muted)}
+#cloudState::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
+#cloudState[data-state="ok"]{color:#15803d;background:rgba(39,168,120,.14);border-color:rgba(39,168,120,.5)}
+#cloudState[data-state="busy"]{color:#1663d5;background:rgba(22,99,213,.12);border-color:rgba(22,99,213,.4)}
+#cloudState[data-state="busy"]::before{animation:cs-pulse 1s ease-in-out infinite}
+#cloudState[data-state="warn"]{color:#b45309;background:rgba(239,171,65,.18);border-color:rgba(239,171,65,.6)}
+#cloudState[data-state="error"]{color:#b91c1c;background:rgba(232,120,120,.16);border-color:rgba(232,120,120,.55)}
+body.dark #cloudState[data-state="ok"]{color:#6ee7b7}
+body.dark #cloudState[data-state="busy"]{color:#8ab8ff}
+body.dark #cloudState[data-state="warn"]{color:#fcd34d}
+body.dark #cloudState[data-state="error"]{color:#ffb3b3}
+@keyframes cs-pulse{50%{opacity:.3}}
+@media(prefers-reduced-motion:reduce){#cloudState[data-state="busy"]::before{animation:none}}
+.tracker-link{display:inline-flex;align-items:center;padding:7px 12px;border:1px solid var(--line);border-radius:9px;background:var(--panel);color:var(--accent);font-size:.8rem;font-weight:700;text-decoration:none;white-space:nowrap}
+.tracker-link:hover,.tracker-link:focus-visible{border-color:var(--accent)}
+#backupAge.backup-old{color:#b45309;font-weight:700}
+body.dark #backupAge.backup-old{color:#fcd34d}
+</style>
+<script>
+(function(){
+  var el=document.getElementById('cloudState');if(!el)return;
+  function classify(t){t=(t||'').toLowerCase();
+    if(/failed|expired|cancel/.test(t))return 'error';
+    if(/unsynced|waiting|reconcil/.test(t))return 'warn';
+    if(/…|\.\.\./.test(t))return 'busy';
+    if(/^local only/.test(t))return 'local';
+    return 'ok'}
+  function apply(){var c=classify(el.textContent);if(el.dataset.state!==c)el.dataset.state=c}
+  new MutationObserver(apply).observe(el,{childList:true,characterData:true,subtree:true});apply();
+})();
+</script>
+<style id="stat-card-fill-2026">
+.stats .card{--tile:#748ca7;background:color-mix(in srgb,var(--tile) 22%,var(--panel))!important;border-color:color-mix(in srgb,var(--tile) 55%,var(--line))!important}
+.stats .card:nth-child(1){--tile:#748ca7}
+.stats .card:nth-child(2){--tile:#efab41}
+.stats .card:nth-child(3){--tile:#27a878}
+.stats .card:nth-child(4){--tile:#e26a66}
+.stats .card::before{width:4px!important;background:var(--tile)!important}
+.stats .card[data-stat]:hover,.stats .card[data-stat]:focus-visible,.stats .card[data-stat].stat-active{background:color-mix(in srgb,var(--tile) 32%,var(--panel))!important;border-color:var(--tile)!important}
+body:not(.dark) .stats .card{background:color-mix(in srgb,var(--tile) 16%,#fff)!important}
+body:not(.dark) .stats .card[data-stat]:hover,body:not(.dark) .stats .card[data-stat]:focus-visible,body:not(.dark) .stats .card[data-stat].stat-active{background:color-mix(in srgb,var(--tile) 26%,#fff)!important}
+</style>
+</body></html>
