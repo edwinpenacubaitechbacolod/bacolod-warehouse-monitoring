@@ -594,7 +594,7 @@ function initCloudTokenClient(){
     return;
    }
    cloudToken=response.access_token;
-   cloudStatus('Connected — choose load or upload');
+   cloudStatus('Connected');
    updateCloudControls();
    $('cloudModal').classList.remove('hidden');
    try{
